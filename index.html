@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="theme-color" content="#111a24"/><meta name="description" content="Riftborne — a single-player elemental arena odyssey. Master six elements, take flight, and challenge five ancient guardians."/><title>RIFTBORNE · An Elemental Odyssey</title></head>
+<body>
+ <link rel="icon" type="image/png" href="/favicon.png"/>
+ <canvas id="game" aria-label="Riftborne 3D game arena"></canvas>
+ <div id="vignette"></div><div id="damage-flash"></div>
+ <div id="loading"><span class="eyebrow">AN ELEMENTAL ODYSSEY</span><h1>RIFTBORNE</h1><div class="load-track"><i id="load-progress"></i></div><p id="load-label">Summoning the Sundered Gardens…</p></div>
+ <main id="menu" hidden>
+  <header><a class="brand" href="#">R / B</a><span class="eyebrow">SINGLE PLAYER · ELEMENTAL ACTION</span><button class="quiet" id="menu-settings">SETTINGS</button></header>
+  <section class="title-block"><div class="edition"><i></i> THE FIVEFOLD TRIAL</div><h1>RIFT<span>BORNE</span></h1><p class="tagline">Two gauntlets.<br>Six elements. No limits.</p><p class="intro">Take flight above a fractured world.<br>Turn the elements against five ancient guardians.</p><button id="start" class="primary">ENTER THE RIFT <span>→</span></button><button id="howto" class="text-button">HOW TO PLAY <span>+</span></button></section>
+  <aside class="menu-chapter"><span class="eyebrow">YOUR FIRST CHALLENGE</span><h2>The Pyre Titan</h2><p>THE SUNDERED GARDENS</p><div class="chapter-rule"></div><span>01 <small>/ 05 GUARDIANS</small></span></aside>
+  <footer><span>AN ORIGINAL WORLD. AN ELEMENTAL DUEL.</span><span id="best">FIRE + FROST EQUIPPED</span></footer>
+ </main>
+ <div id="hud" hidden>
+  <div class="journey"><span class="brand">R / B</span><div><span id="biome"></span><p id="objective">BREAK THE TITAN'S CORE</p></div></div>
+  <div class="boss-hud"><div class="boss-title"><span id="boss-name"></span><span id="boss-phase"></span></div><div class="boss-track"><i id="boss-health"></i><b></b><b></b></div><div class="boss-sub"><span id="boss-state"></span><span id="boss-hp"></span></div></div>
+  <div class="top-right"><span id="timer">00:00</span><button id="pause-button" class="quiet">ESC · PAUSE</button></div>
+  <div id="crosshair"><i></i><i></i><i></i><i></i><span></span></div><div id="lock-label" hidden>LOCKED</div>
+  <div id="warning"></div><div id="announcement"><span></span><h2></h2></div><div id="combo"></div>
+  <div class="player-hud"><div class="health-label"><span>VITALITY</span><strong id="health-value">160 <small>/ 160</small></strong></div><div class="health-track"><i id="health"></i></div><div class="energy-track"><i id="energy"></i></div><div class="mobility"><span id="dodge-label">C · AIR DODGE</span><span id="rune-label">R · BLINK</span></div></div>
+  <div class="bottom-center"><div id="overdrive"><i></i><span>F · OVERDRIVE <b>35%</b></span></div><span id="movement-hint">SPACE · JUMP / HOLD TO LEVITATE</span></div>
+  <div class="gauntlets"><div class="gauntlet" id="left-gauntlet"><div class="element-art"></div><div><small>LMB · LEFT HAND</small><strong>FIRE</strong><span>Q · FLAMEBURST</span></div><b class="cooldown">READY</b></div><div class="gauntlet" id="right-gauntlet"><div class="element-art"></div><div><small>RMB · RIGHT HAND</small><strong>FROST</strong><span>E · FLASH FREEZE</span></div><b class="cooldown">READY</b></div><p>1 / 2 · CYCLE ELEMENTS <span>TAB · LOADOUT</span></p></div>
+ </div>
+ <section id="modal" hidden aria-modal="true" role="dialog"><div class="modal-panel" id="modal-content"></div></section>
+ <div id="fatal" hidden></div>
+ <script type="module" src="/src/main.ts"></script>
+</body></html>
