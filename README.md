@@ -1,6 +1,6 @@
 # Riftborne
 
-A playable desktop-browser alpha of an original single-player elemental arena game.
+A playable desktop-browser alpha of an original single-player elemental arena game based on Spellbreak.
 
 ## Play
 
