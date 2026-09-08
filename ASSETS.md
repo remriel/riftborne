@@ -7,3 +7,7 @@
 - **Audio:** Original Web Audio synthesis in `src/audio.ts`; no third-party recordings.
 
 Terrain topology and arena assembly are original project code. Primitive rings and point sprites are used for spell VFX, danger telegraphs, and pickups, not character stand-ins.
+
+## September 2026 graphics update
+OpenAI-generated stone and six-material character atlas sources are in art/. Seven existing KayKit ruin meshes were finished in Blender. The playable mage and five bosses use Blender-remodeled source meshes, preserved source rigs/animations, and generated material surfaces; the Archon now has a distinct exported asset. Original source licenses continue to apply. Prompts and derivation notes: art/PROMPTS.md.
+

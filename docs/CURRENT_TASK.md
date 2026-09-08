@@ -9,3 +9,21 @@ Do not repeat: Do not claim five naturally playtested wins from accelerated simu
 Unresolved: 30–60 minute pacing and full natural boss difficulty; bespoke Titan/other art; physical stone cover; independent armor meshes; detailed water/surface physics; refined Archon counterplay; full audio/art polish. README documents limitations.
 Next: If requested to continue, inspect git/tests; play first duel with real controls for a complete natural win, tune aiming/camera and damage. Then make each biome layout unique and finish detailed boss/environment mechanics.
 
+
+## Graphics update — 2026-09-08
+Objective: Connect Blender to Codex and improve game graphics.
+Verified: Existing Blender MCP config works after launching Blender 5.2 with blender_mcp_bridge; scene query succeeds. Clean checkout fast-forwarded to origin/master 4606729.
+In progress: Generated stone texture saved in art/ruin-stone-source.png. Plan Blender-finished ruins, textured terrain, lighting polish, runtime verification, GitHub sync.
+
+
+Scope correction: User explicitly prioritizes actual boss and playable character models. Environment pass is implemented but not committed. No Atlas/Fal/Meshy API keys found. Asked about 3D service vs remodeling existing rigs. Inspecting rigged characters through Blender; do not present environment-only update as completion.
+
+
+Build-once-publish requested: finish character exports, restore animations, run the production build once, then push and publish GitHub release. Skip further browser/tests/reviews. No Pages destination configured; release ZIP will include compiled game and local Node launcher. Manual acceptance is the user's next step.
+
+
+Character implementation complete: mage/titan/wyrm/colossus/oracle/archon_reforged.glb integrated, separate Archon config, remodeled geometry and generated material atlas. Blender export succeeded for all six; animation packaging retained 76/14/8/14/8/76 clips respectively. Existing rigs retained; not new AI-generated meshes. Required final build and GitHub release next. No further playtests per user's build-once-publish instruction.
+
+
+Final production build passed 2026-09-08. Nonblocking Vite bundle-size warning remains. Publishing as GitHub tag graphics-2026-09-08 with compiled ZIP and Node launcher. Manual acceptance testing intentionally deferred to user; earlier environment-only browser checks do not validate final remodeled characters.
+

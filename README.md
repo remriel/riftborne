@@ -36,7 +36,7 @@ Double-click **Launch Riftborne.cmd** on Windows, or run `npm install` and `npm 
 
 ## Scope and limitations
 
-This is a **playable alpha**, not a production-complete implementation of every item in the supplied design brief. The five biomes reuse arena geometry. Boss silhouettes use licensed fantasy creatures rather than bespoke commissioned models; the Pyre Titan currently uses a horned demon model. Stone zones do not yet create physical walls. Ice has status/zone effects but no dedicated water-freezing simulation. The Archon has phase-dependent dual elements and mobility but no sophisticated learned counterplay. Armor is a damage pool, not individually destructible mesh pieces. Full 30–60 minute pacing and every boss's natural difficulty remain unvalidated. Audio is simple original synthesis. Desktop keyboard and mouse only.
+This is a **playable alpha**, not a production-complete implementation of every item in the supplied design brief. The five biomes reuse arena geometry. Boss and playable character meshes are Blender-remodeled derivatives of licensed fantasy models, with original rigs and animation clips retained. They are not wholly new commissioned models. Stone zones do not yet create physical walls. Ice has status/zone effects but no dedicated water-freezing simulation. The Archon has phase-dependent dual elements and mobility but no sophisticated learned counterplay. Armor is a damage pool, not individually destructible mesh pieces. Full 30–60 minute pacing and every boss's natural difficulty remain unvalidated. Audio is simple original synthesis. Desktop keyboard and mouse only.
 
 ## Architecture and verification
 
@@ -45,3 +45,7 @@ This is a **playable alpha**, not a production-complete implementation of every 
 Build: `npm run build`. Serve production build: `npm run preview`.
 
 See `docs/PLAYTEST.md` for verified behavior and `docs/CURRENT_TASK.md` for continuation notes. Production exposes a read-only `window.riftborne.snapshot()` diagnostic. The `?qa` URL exposes simulation controls for local testing.
+
+## Reforged graphics update
+The player and all five bosses now load separate remodeled GLBs: hood/cowl and enlarged gauntlets, basalt Titan armor, wider Wyrm wings, crystal Colossus armor, elongated Oracle, and a distinct gold-armored Archon. Blender source files and reproducible asset scripts are in art/ and scripts/. Download the GitHub release ZIP, extract it, and run Launch Riftborne.cmd with Node.js 22+ installed. No npm install is needed for the release build.
+

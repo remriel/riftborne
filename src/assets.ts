@@ -3,9 +3,11 @@ import {GLTFLoader,type GLTF} from 'three/addons/loaders/GLTFLoader.js';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
 export class AssetLibrary {
  models=new Map<string,GLTF>();textures=new Map<string,T.Texture>();
- async load(progress:(value:number)=>void){const loader=new GLTFLoader();const names=['mage','titan','wyrm','colossus','oracle','pillar_decorated','wall_arched','wall_broken','floor_tile_large','floor_dirt_large_rocky','stairs_wide','barrel_large','column'];let complete=0;
-  await Promise.all(names.map(async name=>{const gltf=await loader.loadAsync(`./assets/${name}.glb`);this.models.set(name,gltf);progress(++complete/(names.length+2));}));
-  for(const name of ['sky','elements']){const t=await new T.TextureLoader().loadAsync(`./assets/${name}.webp`);t.colorSpace=T.SRGBColorSpace;this.textures.set(name,t);progress(++complete/(names.length+2));}
+ async load(progress:(value:number)=>void){const loader=new GLTFLoader();const names=['mage','titan','wyrm','colossus','oracle','archon','pillar_decorated','wall_arched','wall_broken','floor_tile_large','floor_dirt_large_rocky','stairs_wide','barrel_large','column'];let complete=0;
+  const finished=new Set(['pillar_decorated','wall_arched','wall_broken','floor_tile_large','floor_dirt_large_rocky','stairs_wide','column']);
+  const characters=new Set(['mage','titan','wyrm','colossus','oracle','archon']);
+  await Promise.all(names.map(async name=>{const gltf=await loader.loadAsync(`./assets/${name}${characters.has(name)?'_reforged':finished.has(name)?'_finished':''}.glb`);gltf.scene.traverse(o=>{if(o instanceof T.Mesh)for(const m of Array.isArray(o.material)?o.material:[o.material])if(m.map)m.map.anisotropy=8;});this.models.set(name,gltf);progress(++complete/(names.length+3));}));
+  for(const name of ['sky','elements','ruin-stone']){const t=await new T.TextureLoader().loadAsync(`./assets/${name}.webp`);t.colorSpace=T.SRGBColorSpace;t.anisotropy=8;if(name==='ruin-stone'){t.wrapS=t.wrapT=T.RepeatWrapping;}this.textures.set(name,t);progress(++complete/(names.length+3));}
  }
  model(name:string,height?:number){const source=this.models.get(name);if(!source)throw Error(`Missing asset: ${name}`);const object=clone(source.scene);const box=new T.Box3().setFromObject(object),size=box.getSize(new T.Vector3());const scale=height?height/size.y:1;object.scale.multiplyScalar(scale);const center=box.getCenter(new T.Vector3());object.position.set(-center.x*scale,-box.min.y*scale,-center.z*scale);const root=new T.Group();root.add(object);root.userData.assetObject=object;root.traverse(n=>{if(n instanceof T.Mesh){n.castShadow=true;n.receiveShadow=true;n.frustumCulled=false;}});return root;}
  animation(root:T.Group,name:string){return new ActorAnimation(root,this.models.get(name)!.animations);}

@@ -2,6 +2,7 @@ import * as T from 'three';
 import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
 import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
 import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 import {AssetLibrary,type ActorAnimation} from './assets';
 import {BiomeView} from './world';
@@ -12,19 +13,23 @@ import type {Game} from './game';
 interface Actor {root:T.Group;anim:ActorAnimation;materials:T.MeshStandardMaterial[];}
 export class GameRenderer {
  scene=new T.Scene();camera=new T.PerspectiveCamera(75,innerWidth/innerHeight,.1,450);renderer:T.WebGLRenderer;composer:EffectComposer;bloom:UnrealBloomPass;
- assets=new AssetLibrary();world!:BiomeView;vfx:VFXManager;actors=new Map<number,Actor>();dynamic=new Map<number,T.Object3D>();props=new Map<number,T.Object3D>();lastBiome=-1;lastBoss:unknown;raycaster=new T.Raycaster();target=V();fov=75;shakeEnabled=true;quality=true;frameMs=16;core!:T.Sprite;
+ assets=new AssetLibrary();world!:BiomeView;vfx:VFXManager;actors=new Map<number,Actor>();dynamic=new Map<number,T.Object3D>();props=new Map<number,T.Object3D>();lastBiome=-1;lastBoss:unknown;raycaster=new T.Raycaster();target=V();fov=75;shakeEnabled=true;quality=true;frameMs=16;core!:T.Sprite;sun!:T.DirectionalLight;rim!:T.DirectionalLight;ambient!:T.HemisphereLight;spellLights:T.PointLight[]=[];
  constructor(public canvas:HTMLCanvasElement){
-  this.renderer=new T.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});this.renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));this.renderer.setSize(innerWidth,innerHeight);this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=T.PCFSoftShadowMap;this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.2;
-  this.scene.add(new T.HemisphereLight(0xdbedff,0x544652,2.5));const sun=new T.DirectionalLight(0xffddbb,3.2);sun.position.set(-35,65,25);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-55,right:55,top:55,bottom:-55,near:1,far:150});sun.shadow.bias=-.0005;sun.shadow.normalBias=.07;this.scene.add(sun);
-  const rim=new T.DirectionalLight(0x84c6ff,1.6);rim.position.set(20,15,-30);this.scene.add(rim);
+  this.renderer=new T.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});this.renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));this.renderer.setSize(innerWidth,innerHeight);this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=T.PCFSoftShadowMap;this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.05;
+  this.ambient=new T.HemisphereLight(0xc6ddff,0x303244,1.35);this.scene.add(this.ambient);const sun=this.sun=new T.DirectionalLight(0xffddbb,3.2);sun.position.set(-35,45,25);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-55,right:55,top:55,bottom:-55,near:1,far:150});sun.shadow.bias=-.0005;sun.shadow.normalBias=.07;this.scene.add(sun);
+  const rim=this.rim=new T.DirectionalLight(0x84c6ff,1.6);rim.position.set(20,15,-30);this.scene.add(rim);
+  const pmrem=new T.PMREMGenerator(this.renderer),room=new RoomEnvironment();this.scene.environment=pmrem.fromScene(room,.04).texture;this.scene.environmentIntensity=.22;room.dispose();pmrem.dispose();
+  for(let i=0;i<4;i++){const light=new T.PointLight(0xffffff,0,12,2);this.spellLights.push(light);this.scene.add(light);}
   this.vfx=new VFXManager(this.scene);this.composer=new EffectComposer(this.renderer);this.composer.addPass(new RenderPass(this.scene,this.camera));this.bloom=new UnrealBloomPass(new T.Vector2(innerWidth,innerHeight),.38,.6,1.3);this.composer.addPass(this.bloom);this.composer.addPass(new OutputPass());
   window.addEventListener('resize',()=>this.resize());canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();document.getElementById('fatal')!.textContent='Graphics context interrupted. Reload to restore the arena.';document.getElementById('fatal')!.hidden=false;});
  }
  async init(g:Game,progress:(n:number)=>void){await this.assets.load(progress);this.scene.background=this.assets.textures.get('sky')!;this.world=new BiomeView(this.scene,this.assets);this.build(g);}
  resize(){this.camera.aspect=innerWidth/innerHeight;this.camera.updateProjectionMatrix();this.renderer.setSize(innerWidth,innerHeight);this.composer.setSize(innerWidth,innerHeight);}
  actor(id:number,name:string,height:number,tint?:number){const root=this.assets.model(name,height);const materials:T.MeshStandardMaterial[]=[];root.traverse(n=>{if(n instanceof T.Mesh){n.material=Array.isArray(n.material)?n.material.map(m=>m.clone()):n.material.clone();for(const m of Array.isArray(n.material)?n.material:[n.material])if(m instanceof T.MeshStandardMaterial){if(tint)m.color.set(tint);materials.push(m);}}});const actor={root,anim:this.assets.animation(root,name),materials};this.scene.add(root);this.actors.set(id,actor);return actor;}
- build(g:Game){this.world.build(g);for(const a of this.actors.values()){a.anim.dispose();a.materials.forEach(m=>m.dispose());this.scene.remove(a.root);}this.actors.clear();for(const o of this.dynamic.values())this.vfx.disposeObject(o);this.dynamic.clear();for(const o of this.props.values())this.scene.remove(o);this.props.clear();if(this.core)this.vfx.disposeObject(this.core);
-  this.actor(0,'mage',2.2);const d=BOSSES[g.boss.index];this.actor(1,d.asset,d.height,g.boss.index===0?0xdca280:undefined);this.core=this.vfx.orb(d.element,3);this.scene.add(this.core);
+ build(g:Game){this.world.build(g);
+  const palette=[{sun:0xffd7a1,rim:0x72c8e8,exposure:1.05},{sun:0xbca4ff,rim:0x6bcaff,exposure:.94},{sun:0xdceeff,rim:0x68baff,exposure:1.08},{sun:0xc6ddb0,rim:0x64cabf,exposure:.96},{sun:0xffddb5,rim:0xa098ff,exposure:1.03}][g.boss.index];
+  this.sun.color.set(palette.sun);this.rim.color.set(palette.rim);this.renderer.toneMappingExposure=palette.exposure;for(const a of this.actors.values()){a.anim.dispose();a.materials.forEach(m=>m.dispose());this.scene.remove(a.root);}this.actors.clear();for(const o of this.dynamic.values())this.vfx.disposeObject(o);this.dynamic.clear();for(const o of this.props.values())this.scene.remove(o);this.props.clear();if(this.core)this.vfx.disposeObject(this.core);
+  this.actor(0,'mage',2.2);const d=BOSSES[g.boss.index];this.actor(1,d.asset,d.height);this.core=this.vfx.orb(d.element,3);this.scene.add(this.core);
   for(const p of g.props){const o=this.assets.model(p.type==='barrel'?'barrel_large':'pillar_decorated',p.type==='barrel'?1.8:5);o.position.copy(p.pos);this.props.set(p.id,o);this.scene.add(o);}
   this.lastBiome=g.boss.index;this.lastBoss=g.boss;this.camera.position.copy(g.player.pos).add(V(3,5,9));
  }
@@ -56,6 +61,7 @@ export class GameRenderer {
   for(let i=0;i<4;i++){const id=-10-i;const o=get(id,()=>{const group=new T.Group();for(let j=0;j<6;j++)group.add(this.vfx.ring('wind',2.5-j*.15,.35));return group;});const a=i*Math.PI/2+.5;o.position.set(Math.sin(a)*29,.2,Math.cos(a)*29);o.children.forEach((c,j)=>c.position.y=(g.time*3+j*2)%13);}
   for(let hand=0;hand<2;hand++){const id=-20-hand;const o=get(id,()=>this.vfx.orb(p.hands[hand],1.5));const right=V(Math.cos(p.yaw),0,-Math.sin(p.yaw));o.position.copy(p.pos).addScaledVector(right,hand===0?-.7:.7).add(V(0,.5,0));(o as T.Sprite).material.color.set(SPELLS[p.hands[hand]].color);o.visible=g.state!=='menu';}
   for(const [id,obj] of this.dynamic)if(!alive.has(id)){this.vfx.disposeObject(obj);this.dynamic.delete(id);}
+  for(let i=0;i<this.spellLights.length;i++){const light=this.spellLights[i],shot=g.projectiles[i];light.intensity=shot?(shot.heavy?40:18):0;if(shot){light.position.copy(shot.pos);light.color.set(SPELLS[shot.element].color);}}
   this.vfx.update(g.state==='playing'?dt:0);if(this.quality)this.composer.render();else this.renderer.render(this.scene,this.camera);
  }
 }
