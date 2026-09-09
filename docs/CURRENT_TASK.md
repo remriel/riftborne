@@ -27,3 +27,9 @@ Character implementation complete: mage/titan/wyrm/colossus/oracle/archon_reforg
 
 Final production build passed 2026-09-08. Nonblocking Vite bundle-size warning remains. Publishing as GitHub tag graphics-2026-09-08 with compiled ZIP and Node launcher. Manual acceptance testing intentionally deferred to user; earlier environment-only browser checks do not validate final remodeled characters.
 
+## GPT Image 2.5 graphics refresh — 2026-09-09
+
+Objective: Use the new OpenAI image generator to refresh production graphics. Official docs verified GPT Image 2.5 Sunburst is the most capable generation/editing model. Generated and packaged replacement sky panorama, six-element ability atlas, and six-character material atlas. Source files live in `art/`; runtime sky and element WebPs replaced. Next: rerun Blender character reforge with the new atlas, package animation clips, build, inspect the running result, then sync GitHub.
+
+Completed: Blender rebaked the new character atlas into all six remodeled GLBs; `package-characters.mjs` restored 76/14/8/14/8/76 animation clips for mage/Titan/Wyrm/Colossus/Oracle/Archon. Production build passed. Browser screenshots verified the title panorama, Fire/Frost HUD icons, player surface, and Titan surface at `?qa`; zero browser errors, with the pre-existing Rapier initialization deprecation warning. Exact Image API selection was unavailable because `OPENAI_API_KEY` is absent and the built-in generator does not expose its resolved model snapshot; prompts and provenance record this accurately. Next: user acceptance playthrough; address only reported visual issues.
+
