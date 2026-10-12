@@ -37,3 +37,5 @@ Completed: Blender rebaked the new character atlas into all six remodeled GLBs; 
 
 The current objective is to ship v0.2.0 with five distinct arena layouts. This new request supersedes the previous graphics-only acceptance step. Read `docs/PROJECT_STATE.md` for durable architecture and constraints, then `docs/PROGRESS.md` for the active release checklist and next steps.
 
+Completed: v0.2.0 shipped on 2026-10-12. GitHub Pages booted into the first duel, and the published Windows ZIP digest matches the tested local package. The next development step is a full natural first-boss win with real controls; see `docs/PROGRESS.md`.
+

@@ -2,6 +2,8 @@
 
 Updated: 2026-10-12
 
+Release status: [v0.2.0](https://github.com/remriel/riftborne/releases/tag/v0.2.0) is published from commit `df9feb53a7a7f1cf235ccb758b682a5772af1654`. The [Pages build](https://remriel.github.io/riftborne/) booted into the first duel after the Pages workflow succeeded. The Windows ZIP is 20,120,728 bytes with SHA-256 `1b085dccf90bf4767ef868455eb6a3b90e16520f5941cda442913d95c778dc40`.
+
 ## Architecture and decisions
 
 - Riftborne is a desktop browser game built with Vite, TypeScript, Three.js, and Rapier. `src/game.ts` owns the fixed-step simulation and campaign state. `src/render.ts` and `src/world.ts` adapt that state into the scene; the DOM in `src/ui.ts` owns menus and the HUD.
@@ -46,4 +48,4 @@ Updated: 2026-10-12
 
 ## RESUME HERE
 
-Finish the 2026-10-12 realm-layout release: the local build, tests, audit, five-realm screenshots, input smoke test, ZIP smoke test, and `/riftborne/` mount check have passed. Push the verified commit to `master`, confirm Pages deployment, publish the v0.2.0 release with the Windows ZIP, and update `docs/PROGRESS.md` with final links and status.
+The v0.2.0 release is complete. The latest code is on `master`, Pages is live, and the Windows ZIP hash matches the GitHub release asset digest. For the next development pass, begin with a complete natural first-boss win using real controls, record the actual time and difficulty, then tune aiming, camera, and damage from that evidence. Follow with physical cover and biome-specific gameplay mechanics; keep the shared simulation/render layout contract intact. Read `docs/PROGRESS.md` for verification details and next steps.
