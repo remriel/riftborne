@@ -4,7 +4,7 @@ Updated: 2026-10-12
 
 Release status: [v0.2.0](https://github.com/remriel/riftborne/releases/tag/v0.2.0) is published from commit `df9feb53a7a7f1cf235ccb758b682a5772af1654`. The [Pages build](https://remriel.github.io/riftborne/) booted into the first duel after the Pages workflow succeeded. The Windows ZIP is 20,120,728 bytes with SHA-256 `1b085dccf90bf4767ef868455eb6a3b90e16520f5941cda442913d95c778dc40`.
 
-Vercel status: the existing `riftborne` project in the `REMRIEL` team (`team_sS8RTjB1ldRc5jnptpOKb2XP`, project `prj_V6d3R1RJKuZxkT1eKXDVLcrGlHgc`) is connected to `remriel/riftborne` and deploys the `master` branch to production. Its [production domain](https://riftborne-gamma.vercel.app/) loaded the v0.2.0 game and entered the first duel with zero browser errors. The last observed production deployment before this documentation update was `dpl_7LJAJQX8q2kcG5Qctu9CJ4P7jwhN` at commit `fc0548703632989cbbb1b58465f3d10e2a7588f3`.
+Vercel status: the existing `riftborne` project in the `REMRIEL` team (`team_sS8RTjB1ldRc5jnptpOKb2XP`, project `prj_V6d3R1RJKuZxkT1eKXDVLcrGlHgc`) is connected to `remriel/riftborne` and deploys the `master` branch to production. [Deployment `dpl_CWxNm7wybXK19HcPg1T51sxkPa7S`](https://vercel.com/remriel/riftborne/CWxNm7wybXK19HcPg1T51sxkPa7S) built commit `93a36a4f6021f243a34c2df2fa5acc0b4939c695` and reached `READY` with no alias error. Its [production domain](https://riftborne-gamma.vercel.app/) loaded the v0.2.0 game and entered the first duel with zero browser errors.
 
 ## Architecture and decisions
 
@@ -51,4 +51,4 @@ Vercel status: the existing `riftborne` project in the `REMRIEL` team (`team_sS8
 
 ## RESUME HERE
 
-The v0.2.0 release is complete and the existing Vercel production site has passed a browser boot check. Finish the current Vercel update by pushing the README and handoff changes, confirming the new production deployment is `READY` on the new `master` commit, and checking that its production domain still enters the first duel. Then begin the next development pass with a complete natural first-boss win using real controls; record time and difficulty before tuning aiming, camera, and damage. Keep the shared simulation/render layout contract intact. Read `docs/PROGRESS.md` for the active checklist.
+The v0.2.0 release is complete on GitHub Pages and Vercel. The Vercel production alias loaded and entered the first duel after the `master` deployment above reached `READY`; this final handoff update changes documentation only. For the next development pass, complete a natural first-boss win using real controls and record time and difficulty before tuning aiming, camera, and damage. Keep the shared simulation/render layout contract intact. Read `docs/PROGRESS.md` for the verified deployment details and next steps.

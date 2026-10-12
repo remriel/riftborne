@@ -39,3 +39,7 @@ The current objective is to ship v0.2.0 with five distinct arena layouts. This n
 
 Completed: v0.2.0 shipped on 2026-10-12. GitHub Pages booted into the first duel, and the published Windows ZIP digest matches the tested local package. The next development step is a full natural first-boss win with real controls; see `docs/PROGRESS.md`.
 
+## Vercel production update — 2026-10-12
+
+The existing `riftborne` project in the REMRIEL Vercel team deployed the current `master` branch to production. Deployment `dpl_CWxNm7wybXK19HcPg1T51sxkPa7S` reached `READY`, its production aliases were assigned, and `https://riftborne-gamma.vercel.app/` entered the first duel with zero browser errors. See `docs/PROJECT_STATE.md` and `docs/PROGRESS.md` for the durable handoff.
+

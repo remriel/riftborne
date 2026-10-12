@@ -6,16 +6,16 @@ Updated: 2026-10-12
 
 Update the existing Riftborne project in the REMRIEL Vercel team to the current v0.2.0 release and verify its production domain.
 
-**Progress: 70%** toward a verified Vercel update. The v0.2.0 GitHub release remains complete.
+**Progress: 100%** — the v0.2.0 Vercel production update is verified. The GitHub release remains complete.
 
 ## Vercel checklist
 
 - [x] Reconcile the repository, handoff files, Git status, and current Vercel project.
 - [x] Confirm the existing `riftborne` project is in the intended REMRIEL team and linked to `remriel/riftborne`.
 - [x] Confirm the production deployment uses current `master` and enter the first duel at the Vercel domain with zero browser errors.
-- [ ] Push the README and project handoff update to trigger a fresh production deployment.
-- [ ] Verify the new deployment is ready, assigned to the production alias, and still boots into play.
-- [ ] Copy final `PROGRESS.md` and `PROJECT_STATE.md` into the task outputs.
+- [x] Push the README and project handoff update to trigger a fresh production deployment.
+- [x] Verify the new deployment is ready, assigned to the production alias, and still boots into play.
+- [x] Copy final `PROGRESS.md` and `PROJECT_STATE.md` into the task outputs.
 
 ## Completed v0.2.0 release checklist
 
@@ -43,6 +43,7 @@ Update the existing Riftborne project in the REMRIEL Vercel team to the current 
 - `df9feb53a7a7f1cf235ccb758b682a5772af1654` was pushed to `master`. GitHub Pages workflow [38290557279](https://github.com/remriel/riftborne/actions/runs/38290557279) succeeded. The [live site](https://remriel.github.io/riftborne/) loaded its relative bundle and entered the first duel with zero browser errors.
 - [GitHub release v0.2.0](https://github.com/remriel/riftborne/releases/tag/v0.2.0) is published from that commit. Its `Riftborne-v0.2.0-Windows.zip` asset is 20,120,728 bytes, and the GitHub SHA-256 digest matches the local ZIP.
 - The existing Vercel production deployment `dpl_7LJAJQX8q2kcG5Qctu9CJ4P7jwhN` was `READY` on `fc0548703632989cbbb1b58465f3d10e2a7588f3`. [riftborne-gamma.vercel.app](https://riftborne-gamma.vercel.app/) loaded the title screen and entered the first duel in Chromium with zero errors.
+- The documentation update on `master` triggered production deployment [`dpl_CWxNm7wybXK19HcPg1T51sxkPa7S`](https://vercel.com/remriel/riftborne/CWxNm7wybXK19HcPg1T51sxkPa7S) at `93a36a4f6021f243a34c2df2fa5acc0b4939c695`. It reached `READY`, reported no alias error, and owned the `riftborne-gamma.vercel.app`, `riftborne-remriel.vercel.app`, and `riftborne-git-master-remriel.vercel.app` aliases.
 
 ## Blockers
 
@@ -56,15 +57,11 @@ None. Natural full-campaign play balance remains an existing limitation, not a b
 - Chromium review: all five realm screenshots, keyboard movement, and primary casting; zero browser errors.
 - ZIP HTTP smoke: index, script, and mage GLB returned 200. Static `/riftborne/` mount: bundle, styles, character GLBs, textures, and favicon returned 200; browser booted into play.
 - Live Pages: workflow succeeded; HTML references `./assets/...`, the JavaScript bundle returned 200 as JavaScript, and Chromium entered the first duel with zero errors.
+- Live Vercel production alias: Chromium reloaded after deployment `dpl_CWxNm7wybXK19HcPg1T51sxkPa7S`, showed the title screen, entered the first duel, and reported zero browser errors. The lone Rapier initialization deprecation warning remains pre-existing and nonblocking.
 
 ## Exact ordered next steps
 
-1. Push the README and handoff changes to `master`.
-2. Wait for the connected Vercel project to build the new production deployment and confirm its Git SHA and aliases.
-3. Open the production URL, enter the first duel, and check the console for errors.
-4. Mark the Vercel update complete in these files, sync the final notes, and copy them to task outputs.
-
-For the next development milestone after deployment:
+The Vercel update has no remaining steps. For the next development milestone:
 
 1. Play the first boss through a natural win with real controls; record time, deaths, and aiming/camera friction.
 2. Tune first-duel damage, enemy pressure, and camera behavior using that playthrough.
