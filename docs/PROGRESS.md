@@ -4,16 +4,25 @@ Updated: 2026-10-12
 
 ## Current objective
 
-Ship a new release with five distinct arena layouts, an updated dependency lockfile, and verified browser and Windows-build delivery.
+Update the existing Riftborne project in the REMRIEL Vercel team to the current v0.2.0 release and verify its production domain.
 
-**Progress: 100%** — v0.2.0 is verified and published.
+**Progress: 70%** toward a verified Vercel update. The v0.2.0 GitHub release remains complete.
 
-## Checklist
+## Vercel checklist
+
+- [x] Reconcile the repository, handoff files, Git status, and current Vercel project.
+- [x] Confirm the existing `riftborne` project is in the intended REMRIEL team and linked to `remriel/riftborne`.
+- [x] Confirm the production deployment uses current `master` and enter the first duel at the Vercel domain with zero browser errors.
+- [ ] Push the README and project handoff update to trigger a fresh production deployment.
+- [ ] Verify the new deployment is ready, assigned to the production alias, and still boots into play.
+- [ ] Copy final `PROGRESS.md` and `PROJECT_STATE.md` into the task outputs.
+
+## Completed v0.2.0 release checklist
 
 - [x] Read the repository handoff, inspect Git status/diff, source, and existing tests.
 - [x] Define five realm layouts shared by Rapier and scene construction.
 - [x] Add integration coverage for distinct collision footprints, platform heights, and clear spawn points.
-- [x] Run the existing and new unit tests; all three pass.
+- [x] Run the existing and new unit tests; all four pass.
 - [x] Build the production game; TypeScript and Vite pass with a nonblocking chunk warning.
 - [x] Apply fixable dependency security updates; `npm audit fix` reports zero vulnerabilities.
 - [x] Inspect browser renders of the first arena and all later realms; fix entry crowding and the carried hit flash.
@@ -33,6 +42,7 @@ Ship a new release with five distinct arena layouts, an updated dependency lockf
 - Local publication artifact: `Riftborne-v0.2.0-Windows.zip` (SHA-256 `1B085DCCF90BF4767EF868455EB6A3B90E16520F5941CDA442913D95C778DC40`).
 - `df9feb53a7a7f1cf235ccb758b682a5772af1654` was pushed to `master`. GitHub Pages workflow [38290557279](https://github.com/remriel/riftborne/actions/runs/38290557279) succeeded. The [live site](https://remriel.github.io/riftborne/) loaded its relative bundle and entered the first duel with zero browser errors.
 - [GitHub release v0.2.0](https://github.com/remriel/riftborne/releases/tag/v0.2.0) is published from that commit. Its `Riftborne-v0.2.0-Windows.zip` asset is 20,120,728 bytes, and the GitHub SHA-256 digest matches the local ZIP.
+- The existing Vercel production deployment `dpl_7LJAJQX8q2kcG5Qctu9CJ4P7jwhN` was `READY` on `fc0548703632989cbbb1b58465f3d10e2a7588f3`. [riftborne-gamma.vercel.app](https://riftborne-gamma.vercel.app/) loaded the title screen and entered the first duel in Chromium with zero errors.
 
 ## Blockers
 
@@ -49,7 +59,12 @@ None. Natural full-campaign play balance remains an existing limitation, not a b
 
 ## Exact ordered next steps
 
-The release objective has no remaining steps. For the next development milestone:
+1. Push the README and handoff changes to `master`.
+2. Wait for the connected Vercel project to build the new production deployment and confirm its Git SHA and aliases.
+3. Open the production URL, enter the first duel, and check the console for errors.
+4. Mark the Vercel update complete in these files, sync the final notes, and copy them to task outputs.
+
+For the next development milestone after deployment:
 
 1. Play the first boss through a natural win with real controls; record time, deaths, and aiming/camera friction.
 2. Tune first-duel damage, enemy pressure, and camera behavior using that playthrough.

@@ -4,7 +4,7 @@ A playable desktop-browser alpha of an original single-player elemental arena ga
 
 ## Play
 
-Play the [browser build](https://remriel.github.io/riftborne/), or download the latest GitHub release ZIP and double-click **Launch Riftborne.cmd** on Windows with Node.js 22+ installed. From a checkout, run `npm ci` and `npm run dev`. Choose **Enter the Rift** to immediately challenge the Pyre Titan.
+Play on [Vercel](https://riftborne-gamma.vercel.app/) or [GitHub Pages](https://remriel.github.io/riftborne/). For offline Windows play, download the latest GitHub release ZIP and double-click **Launch Riftborne.cmd** with Node.js 22+ installed. From a checkout, run `npm ci` and `npm run dev`. Choose **Enter the Rift** to immediately challenge the Pyre Titan.
 
 ## Controls
 
