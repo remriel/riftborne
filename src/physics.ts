@@ -1,17 +1,17 @@
 import RAPIER from '@dimforge/rapier3d-compat';
 import {V} from './core';
+import {arenaFor} from './arena';
 import type {Vector3} from 'three';
 export interface Platform {pos:Vector3;size:Vector3;}
 export class ArenaPhysics {
  world!:RAPIER.World; controller!:RAPIER.KinematicCharacterController;body!:RAPIER.RigidBody;collider!:RAPIER.Collider;
  platforms:Platform[]=[]; propColliders=new Map<number,RAPIER.Collider>();
  async init(){await RAPIER.init();this.reset();}
- reset(){
+ reset(index=0){
   this.world?.free(); this.world=new RAPIER.World({x:0,y:-26,z:0});this.world.timestep=1/60;this.platforms=[];this.propColliders.clear();
   this.box(V(0,-2,0),V(96,4,96));
-  // Raised traversal islands around an unobstructed central dueling floor.
-  for(let i=0;i<8;i++){const a=i*Math.PI/4;this.box(V(Math.sin(a)*34,1.5+(i%3)*1.8,Math.cos(a)*34),V(12,3+(i%3)*3.6,12));}
-  for(let i=0;i<4;i++){const a=i*Math.PI/2+.5;this.box(V(Math.sin(a)*23,1,Math.cos(a)*23),V(6,2,6));}
+  for(const [x,z,width,depth,top] of arenaFor(index).platforms)
+   this.box(V(x,top/2,z),V(width,top,depth));
   this.body=this.world.createRigidBody(RAPIER.RigidBodyDesc.kinematicPositionBased().setTranslation(0,1.1,16));
   this.collider=this.world.createCollider(RAPIER.ColliderDesc.capsule(.6,.45),this.body);
   this.controller=this.world.createCharacterController(.03);this.controller.setSlideEnabled(true);this.controller.enableAutostep(.65,.3,true);this.controller.enableSnapToGround(.35);this.controller.setMaxSlopeClimbAngle(Math.PI*.3);

@@ -2,12 +2,13 @@ import * as T from 'three';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {BOSSES} from './config';
 import {V} from './core';
+import {arenaFor} from './arena';
 import type {AssetLibrary} from './assets';
 import type {Game} from './game';
 export class BiomeView {
  root=new T.Group();groundMaterial!:T.MeshStandardMaterial;ownedGeometry:T.BufferGeometry[]=[];ownedMaterials:T.Material[]=[];
  constructor(private scene:T.Scene,private assets:AssetLibrary){scene.add(this.root);}
- build(g:Game){this.root.clear();this.ownedGeometry.forEach(x=>x.dispose());this.ownedMaterials.forEach(x=>x.dispose());this.ownedGeometry=[];this.ownedMaterials=[];const data=BOSSES[g.boss.index];
+ build(g:Game){this.root.clear();this.ownedGeometry.forEach(x=>x.dispose());this.ownedMaterials.forEach(x=>x.dispose());this.ownedGeometry=[];this.ownedMaterials=[];const data=BOSSES[g.boss.index],arena=arenaFor(g.boss.index);
   this.scene.fog=new T.Fog(data.fog,65,195);
   // Irregular cliff skirt: purpose-built terrain topology, not primitive character stand-ins.
   const positions:number[]=[],colors:number[]=[],indices:number[]=[],N=96;const color=new T.Color(data.ground);
@@ -22,9 +23,8 @@ export class BiomeView {
    place('floor_dirt_large_rocky',V(p.pos.x,p.pos.y-p.size.y/2,p.pos.z),V(p.size.x,p.size.y,p.size.z));
    place('floor_tile_large',V(p.pos.x,p.pos.y+p.size.y/2+.02,p.pos.z),V(p.size.x,.18,p.size.z));
   }
-  for(let i=0;i<12;i++){const a=i*Math.PI/6,r=39;const x=Math.sin(a)*r,z=Math.cos(a)*r;const y=g.physics.floor(x,z);place(i%3===1?'wall_broken':'wall_arched',V(x,y,z),V(10,10+(i%3)*4,2.5),-a);place('pillar_decorated',V(x+Math.cos(a)*5,y,z-Math.sin(a)*5),V(2.6,12+(i%3)*4,2.6));}
-  for(let i=0;i<4;i++){const a=i*Math.PI/2;place('stairs_wide',V(Math.sin(a)*31,.1,Math.cos(a)*31),V(6,5,10),a);}
-  for(let i=0;i<12;i++){const a=i*2.399,r=74+(i%3)*25;const y=-9+(i%4)*10;place('floor_dirt_large_rocky',V(Math.sin(a)*r,y-12,Math.cos(a)*r),V(15+i%4*3,12,17));place('wall_broken',V(Math.sin(a)*r,y,Math.cos(a)*r),V(12,15,2),a);}
+  for(const ruin of arena.ruins)place(ruin.asset,V(ruin.x,g.physics.floor(ruin.x,ruin.z),ruin.z),V(ruin.width,ruin.height,ruin.depth),ruin.yaw);
+  for(let i=0;i<arena.fragments.count;i++){const a=i*2.399,r=arena.fragments.radius+(i%3)*arena.fragments.step;const y=-9+(i%4)*10;place('floor_dirt_large_rocky',V(Math.sin(a)*r,y-12,Math.cos(a)*r),V(15+i%4*3,12,17));place('wall_broken',V(Math.sin(a)*r,y,Math.cos(a)*r),V(12,15,2),a);}
   staticRoot.updateMatrixWorld(true);
   // Merge static architecture by shared material to keep the arena inexpensive to draw.
   const groups=new Map<T.Material,T.BufferGeometry[]>();staticRoot.traverse(o=>{if(o instanceof T.Mesh&&!Array.isArray(o.material)){const geom=o.geometry.clone();geom.applyMatrix4(o.matrixWorld);const arr=groups.get(o.material)||[];arr.push(geom);groups.set(o.material,arr);}});

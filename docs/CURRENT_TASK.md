@@ -33,3 +33,7 @@ Objective: Use the new OpenAI image generator to refresh production graphics. Of
 
 Completed: Blender rebaked the new character atlas into all six remodeled GLBs; `package-characters.mjs` restored 76/14/8/14/8/76 animation clips for mage/Titan/Wyrm/Colossus/Oracle/Archon. Production build passed. Browser screenshots verified the title panorama, Fire/Frost HUD icons, player surface, and Titan surface at `?qa`; zero browser errors, with the pre-existing Rapier initialization deprecation warning. Exact Image API selection was unavailable because `OPENAI_API_KEY` is absent and the built-in generator does not expose its resolved model snapshot; prompts and provenance record this accurately. Next: user acceptance playthrough; address only reported visual issues.
 
+## Realm layout release — 2026-10-12
+
+The current objective is to ship v0.2.0 with five distinct arena layouts. This new request supersedes the previous graphics-only acceptance step. Read `docs/PROJECT_STATE.md` for durable architecture and constraints, then `docs/PROGRESS.md` for the active release checklist and next steps.
+
