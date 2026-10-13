@@ -6,7 +6,7 @@ Updated: 2026-10-13
 
 Ship v0.3.0 Radiant Magic: beautiful luminous spell effects for all six elements, including the verified combat contact and lock-on fixes, on Vercel and as a GitHub release.
 
-**Progress: 95%** — implementation, visual review, normal-input duel, cleanup, final tests, build, and package verification passed. Publication is pending.
+**Progress: 100%** — v0.3.0 Radiant Magic is published and verified on GitHub and Vercel.
 
 ## Checklist
 
@@ -20,8 +20,8 @@ Ship v0.3.0 Radiant Magic: beautiful luminous spell effects for all six elements
 - [x] Verify a normal-input upgrade transition keeps lock-on off during the sentinel encounter.
 - [x] Confirm 100 emitted bursts respect the 32-burst and 2,200-particle caps and clean up to the original scene size.
 - [x] Final tests, production build, and Windows package verification.
-- [ ] Push and confirm Vercel/Pages production builds and public browser boot.
-- [ ] Publish v0.3.0, verify its ZIP digest, and synchronize final handoff files.
+- [x] Push and confirm Vercel/Pages production builds and public browser boot.
+- [x] Publish v0.3.0, verify its ZIP digest, and synchronize final handoff files.
 
 ## Implementation state
 
@@ -39,14 +39,18 @@ Combat resolves contacts by their first intersection along each projectile step.
 
 - Final tests: 16 passed. Production build passed. npm audit: zero vulnerabilities. All 60 packaged files match the build, including 15 magic textures. Windows ZIP: 22,319,009 bytes; SHA-256 c5513fce64942a3767e210ee9646e7158bd7e60b20d4faffc2356615a1436d19.
 
+- Release commit: dd7187a7391b26eef2e1ad86fb1300a7df58e595. Vercel production deployment dpl_CWDQzfjykhuVonsqqLrqf7JwzsT3 is READY with aliases assigned. GitHub Pages workflow 38431277415 succeeded. The public Vercel browser loaded all 15 generated assets and cast in the first duel with zero errors.
+- Published release: https://github.com/remriel/riftborne/releases/tag/v0.3.0. The uploaded ZIP digest matches the local package.
+
 ## Blockers and limits
 
 None. Full-campaign pacing, human difficulty, splash damage occlusion, physical stone cover, and decorative wall collisions remain unresolved. The first duel can be very short with automated dual casting and reactions; balance needs a separate measured pass.
 
 ## Exact ordered next steps
 
-1. Run final tests and package the production build, then verify the ZIP contains every magic texture.
-2. Push the tested commit and wait for Vercel and Pages to report successful builds of that SHA.
-3. Open the production Vercel URL, enter the first duel, and verify the generated assets load without errors.
-4. Publish v0.3.0 with the ZIP and verify its GitHub SHA-256 digest against the local file.
-5. Record completion, sync the final notes, and copy PROGRESS.md and PROJECT_STATE.md to task outputs.
+The current release objective is complete. For the next development pass:
+
+1. Measure later-boss encounters with normal input and record deaths, time, and aiming friction.
+2. Investigate the short first-duel time and overlapping reaction-zone damage before setting a campaign pacing target.
+3. Implement physical stone cover and splash occlusion with synchronized render/collision placement.
+4. Recheck normal campaign progression before claiming full 30–60 minute pacing.

@@ -47,3 +47,5 @@ The existing `riftborne` project in the REMRIEL Vercel team deployed the current
 
 The active update is v0.3.0: generated elemental magic cores, sigils, trails, sparks, blooms, and spell lighting, plus the verified combat contact and lock-on fixes. The user's GitHub-description request was canceled after they saw the Vercel link already there. Blender was not used for this spell pass; the assets are generated raster textures animated through Three.js. Read `docs/PROGRESS.md` for publication status.
 
+
+Completed: v0.3.0 Radiant Magic shipped 2026-10-13. Vercel and Pages built the verified release commit, public casting loaded all 15 new textures without browser errors, and the GitHub ZIP digest matches the local package. See docs/PROGRESS.md for the final handoff.
