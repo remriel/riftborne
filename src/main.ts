@@ -3,6 +3,10 @@ import {Game} from './game';
 import {GameRenderer} from './render';
 import {AudioManager} from './audio';
 import {UI} from './ui';
+import {inject} from '@vercel/analytics';
+
+inject();
+
 const canvas=document.getElementById('game') as HTMLCanvasElement;
 async function boot(){
  const game=new Game(),view=new GameRenderer(canvas),audio=new AudioManager();await game.init();await view.init(game,n=>{document.getElementById('load-progress')!.style.width=`${Math.round(n*100)}%`;document.getElementById('load-label')!.textContent=`Preparing the arena · ${Math.round(n*100)}%`;});const ui=new UI(game,view,audio);
