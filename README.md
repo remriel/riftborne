@@ -1,5 +1,9 @@
 # Riftborne
 
+![Riftborne elemental arena playtest](docs/playtest-arena.png)
+
+**[Play Riftborne in your browser](https://riftborne-gamma.vercel.app/)**
+
 A playable desktop-browser alpha of an original single-player elemental arena game based on Spellbreak.
 
 ## Play
