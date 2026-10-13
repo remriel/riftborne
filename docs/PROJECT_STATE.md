@@ -1,6 +1,6 @@
 # Riftborne project state
 
-Updated: 2026-10-12
+Updated: 2026-10-13
 
 Release status: [v0.2.0](https://github.com/remriel/riftborne/releases/tag/v0.2.0) is published from commit `df9feb53a7a7f1cf235ccb758b682a5772af1654`. The [Pages build](https://remriel.github.io/riftborne/) booted into the first duel after the Pages workflow succeeded. The Windows ZIP is 20,120,728 bytes with SHA-256 `1b085dccf90bf4767ef868455eb6a3b90e16520f5941cda442913d95c778dc40`.
 
@@ -17,6 +17,13 @@ Vercel status: the existing `riftborne` project in the `REMRIEL` team (`team_sS8
 
 ## Relevant code and dependencies
 
+- `src/magic-vfx.ts` is the current VFX runtime; `src/vfx.ts` re-exports it. Generated textured cores, camera-facing curved trail ribbons, layered sigils, billboard wisps, and expanding impact blooms replace the prior analytic glow sprites and primitive rings. Shared maps are loaded by `AssetLibrary` and preserved during effect disposal.
+- `art/MAGIC_PROMPTS.md` records the three built-in generation prompts and provenance. `scripts/process-magic-assets.mjs` packages 15 alpha-preserving WebP textures in `public/assets/magic/` from the source PNGs in `art/`.
+- VFX resources are capped at 2,200 particles and 32 bursts. The quality setting hides some zone layers and disables bloom. `renderer.info.autoReset=false` plus an explicit reset before each composed frame makes diagnostic draw calls include all render passes.
+
+- `CombatSystem.resolveProjectile` in `src/combat.ts` collects and sorts first contacts against targets, zones, and Rapier terrain. Terrain wins ties. Non-piercing bolts terminate at the first contact; frost with Winter Needle retains its per-target hit set until terrain terminates it.
+- `segmentSphereTime` in `src/core.ts` supplies the segment entry fraction used for ordered target/zone hits. `tests/projectiles.test.ts` covers direct cover blocking, piercing, prop destruction, zone consumption, wind deflection, expiry, and enemy lightning ownership.
+
 - `src/arena.ts`: realm platform and ruin placement data.
 - `src/physics.ts`: Rapier world, character controller, platform colliders, and floor lookup.
 - `src/world.ts`: ground mesh, finished ruin models, visible platform tops, and static geometry merging.
@@ -27,6 +34,11 @@ Vercel status: the existing `riftborne` project in the `REMRIEL` team (`team_sS8
 - `public/assets`: shipping GLBs and WebP textures. `ASSETS.md` records provenance.
 
 ## Discoveries and constraints
+
+- Magic visual QA uses staged `?qa` scenes for repeatable element inspection. Gameplay verification uses separate real keyboard/mouse events without health, boss, or simulation mutations. Keep that distinction in reports.
+- A 100-burst stress check hit the configured 32-burst/2,200-particle caps and returned to 0 bursts, 0 particles, and the original 44 scene children after expiration.
+- The first magic-effects duel sample reached 664 composed draw calls and about 31–34 ms frame intervals on this host. This is an observed browser sample, not a portable GPU benchmark or worst-case performance guarantee.
+- Generated sigils have transparent centers. Ground zones and warning decals are raised above the visible tile surface; Rapier's floor is approximately .19 m below that surface on the central floor.
 
 - Before this change all five realms had the same 8 outer and 4 inner raised platforms, the same ring of walls and pillars, and the same floating fragments; only palette and lighting varied.
 - The first boss is at `(0, 0, -13)` and the player begins at `(0, 1.1, 16)`. Neither point should be covered by a raised platform.
@@ -51,4 +63,4 @@ Vercel status: the existing `riftborne` project in the `REMRIEL` team (`team_sS8
 
 ## RESUME HERE
 
-The v0.2.0 release is complete on GitHub Pages and Vercel. The Vercel production alias loaded and entered the first duel after the `master` deployment above reached `READY`; this final handoff update changes documentation only. For the next development pass, complete a natural first-boss win using real controls and record time and difficulty before tuning aiming, camera, and damage. Keep the shared simulation/render layout contract intact. Read `docs/PROGRESS.md` for the verified deployment details and next steps.
+The current v0.3.0 Radiant Magic pass combines the user's magic-visual request with the verified combat contact and lock-on fixes. All six generated element families are integrated and visually reviewed; a real-input duel reached the upgrade screen and entered the next realm with lock-on off. The 16 combat tests pass, and the VFX stress check demonstrates bounded cleanup. Finish the final package/build, push to GitHub, verify Vercel/Pages and publish v0.3.0. Then prioritize pacing and later-boss playthroughs. Splash damage occlusion, physical stone cover, and decorative wall colliders remain unresolved. See `docs/PROGRESS.md`.

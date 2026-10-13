@@ -1,69 +1,52 @@
 # Riftborne progress
 
-Updated: 2026-10-12
+Updated: 2026-10-13
 
 ## Current objective
 
-Update the existing Riftborne project in the REMRIEL Vercel team to the current v0.2.0 release and verify its production domain.
+Ship v0.3.0 Radiant Magic: beautiful luminous spell effects for all six elements, including the verified combat contact and lock-on fixes, on Vercel and as a GitHub release.
 
-**Progress: 100%** — the v0.2.0 Vercel production update is verified. The GitHub release remains complete.
+**Progress: 95%** — implementation, visual review, normal-input duel, cleanup, final tests, build, and package verification passed. Publication is pending.
 
-## Vercel checklist
+## Checklist
 
-- [x] Reconcile the repository, handoff files, Git status, and current Vercel project.
-- [x] Confirm the existing `riftborne` project is in the intended REMRIEL team and linked to `remriel/riftborne`.
-- [x] Confirm the production deployment uses current `master` and enter the first duel at the Vercel domain with zero browser errors.
-- [x] Push the README and project handoff update to trigger a fresh production deployment.
-- [x] Verify the new deployment is ready, assigned to the production alias, and still boots into play.
-- [x] Copy final `PROGRESS.md` and `PROJECT_STATE.md` into the task outputs.
+- [x] Reconcile repository, Git state, handoff, source, and tests.
+- [x] Complete normal-input first-boss wins without QA combat mutations or accelerated simulation.
+- [x] Reproduce seven combat failures before fixing ordered impacts, piercing, expired spells, and enemy lightning ownership.
+- [x] Clear lock-on between realms and gate it during sentinel waves.
+- [x] Generate three original transparent source images and package 15 runtime textures.
+- [x] Integrate elemental cores, curved filament trails, rotating sigils, wisps, sparks, impact blooms, bloom, and bounded spell lights.
+- [x] Review all six elements in staged arena screenshots and check the new effects during a live duel.
+- [x] Verify a normal-input upgrade transition keeps lock-on off during the sentinel encounter.
+- [x] Confirm 100 emitted bursts respect the 32-burst and 2,200-particle caps and clean up to the original scene size.
+- [x] Final tests, production build, and Windows package verification.
+- [ ] Push and confirm Vercel/Pages production builds and public browser boot.
+- [ ] Publish v0.3.0, verify its ZIP digest, and synchronize final handoff files.
 
-## Completed v0.2.0 release checklist
+## Implementation state
 
-- [x] Read the repository handoff, inspect Git status/diff, source, and existing tests.
-- [x] Define five realm layouts shared by Rapier and scene construction.
-- [x] Add integration coverage for distinct collision footprints, platform heights, and clear spawn points.
-- [x] Run the existing and new unit tests; all four pass.
-- [x] Build the production game; TypeScript and Vite pass with a nonblocking chunk warning.
-- [x] Apply fixable dependency security updates; `npm audit fix` reports zero vulnerabilities.
-- [x] Inspect browser renders of the first arena and all later realms; fix entry crowding and the carried hit flash.
-- [x] Finalize package version, README, and release notes.
-- [x] Run final tests, build, audit, and release ZIP smoke check.
-- [x] Verify the build loads from a `/riftborne/` static mount, matching the GitHub Pages project path.
-- [x] Push the changes and verify the Pages deployment.
-- [x] Publish and verify the new GitHub release and downloadable ZIP.
+`src/magic-vfx.ts` owns the generated-texture VFX runtime. `src/vfx.ts` re-exports it. `AssetLibrary` loads 15 new alpha-preserving WebPs from `public/assets/magic/`. Source PNGs and complete prompts are preserved in `art/`; the processing script is `scripts/process-magic-assets.mjs`.
 
-## Current implementation state
+Combat resolves contacts by their first intersection along each projectile step. Terrain wins ties; normal bolts stop at the first target and Winter Needle retains its per-target hit set while respecting terrain. Consumed or expired spell zones receive no final damage tick. Lock-on resets at realm loads and cannot engage on a sealed boss.
 
-- `src/arena.ts` supplies distinct platform, ruin, and floating-fragment plans for the Sundered Gardens, Cinderwatch Fortress, Glass Peaks, Hollow Marsh, and Aether Citadel.
-- `src/physics.ts` selects the current plan when rebuilding the Rapier world. `src/world.ts` places finished ruins and visible terraces from that plan. `src/game.ts` passes the realm index on transitions.
-- `tests/arena.test.ts` passed along with both existing combat tests.
-- The production build completed locally. Chromium screenshots of all five realms showed distinct placements without clipping or browser errors. Live keyboard movement and mouse casting damaged the first boss.
-- The extracted Windows ZIP served its index, JavaScript bundle, and mage GLB over HTTP. The `/riftborne/` static mount loaded and entered the first duel with zero browser errors.
-- Local publication artifact: `Riftborne-v0.2.0-Windows.zip` (SHA-256 `1B085DCCF90BF4767EF868455EB6A3B90E16520F5941CDA442913D95C778DC40`).
-- `df9feb53a7a7f1cf235ccb758b682a5772af1654` was pushed to `master`. GitHub Pages workflow [38290557279](https://github.com/remriel/riftborne/actions/runs/38290557279) succeeded. The [live site](https://remriel.github.io/riftborne/) loaded its relative bundle and entered the first duel with zero browser errors.
-- [GitHub release v0.2.0](https://github.com/remriel/riftborne/releases/tag/v0.2.0) is published from that commit. Its `Riftborne-v0.2.0-Windows.zip` asset is 20,120,728 bytes, and the GitHub SHA-256 digest matches the local ZIP.
-- The existing Vercel production deployment `dpl_7LJAJQX8q2kcG5Qctu9CJ4P7jwhN` was `READY` on `fc0548703632989cbbb1b58465f3d10e2a7588f3`. [riftborne-gamma.vercel.app](https://riftborne-gamma.vercel.app/) loaded the title screen and entered the first duel in Chromium with zero errors.
-- The documentation update on `master` triggered production deployment [`dpl_CWxNm7wybXK19HcPg1T51sxkPa7S`](https://vercel.com/remriel/riftborne/CWxNm7wybXK19HcPg1T51sxkPa7S) at `93a36a4f6021f243a34c2df2fa5acc0b4939c695`. It reached `READY`, reported no alias error, and owned the `riftborne-gamma.vercel.app`, `riftborne-remriel.vercel.app`, and `riftborne-git-master-remriel.vercel.app` aliases.
+## Verification
 
-## Blockers
+- All 16 combat/arena tests passed after the final combat changes. The first seven new regression cases failed on the prior implementation.
+- All six magic families were inspected in staged QA screenshots. A separate live keyboard/mouse run reached the upgrade screen at 00:13 with 115/160 health and entered Cinderwatch with lock-on off.
+- The staged six-element scenes used roughly 108 draw calls. Busy live samples reached 664 draw calls and approximately 31–34 ms frame intervals on this host; this is not a portable GPU benchmark.
+- A 100-burst cleanup check respected the caps and returned to 0 active effects and the original 44 scene children. Bloom-disabled rendering completed.
+- Browser console: zero errors; existing Rapier initialization warning remains.
 
-None. Natural full-campaign play balance remains an existing limitation, not a blocker for this layout release.
+- Final tests: 16 passed. Production build passed. npm audit: zero vulnerabilities. All 60 packaged files match the build, including 15 magic textures. Windows ZIP: 22,319,009 bytes; SHA-256 c5513fce64942a3767e210ee9646e7158bd7e60b20d4faffc2356615a1436d19.
 
-## Verification so far
+## Blockers and limits
 
-- `npm test`: 4 passed, 0 failed.
-- `npm run build`: passed; Vite emitted its existing large-chunk warning.
-- `npm ci` from the updated lockfile and `npm audit --audit-level=high`: passed with 0 vulnerabilities.
-- Chromium review: all five realm screenshots, keyboard movement, and primary casting; zero browser errors.
-- ZIP HTTP smoke: index, script, and mage GLB returned 200. Static `/riftborne/` mount: bundle, styles, character GLBs, textures, and favicon returned 200; browser booted into play.
-- Live Pages: workflow succeeded; HTML references `./assets/...`, the JavaScript bundle returned 200 as JavaScript, and Chromium entered the first duel with zero errors.
-- Live Vercel production alias: Chromium reloaded after deployment `dpl_CWxNm7wybXK19HcPg1T51sxkPa7S`, showed the title screen, entered the first duel, and reported zero browser errors. The lone Rapier initialization deprecation warning remains pre-existing and nonblocking.
+None. Full-campaign pacing, human difficulty, splash damage occlusion, physical stone cover, and decorative wall collisions remain unresolved. The first duel can be very short with automated dual casting and reactions; balance needs a separate measured pass.
 
 ## Exact ordered next steps
 
-The Vercel update has no remaining steps. For the next development milestone:
-
-1. Play the first boss through a natural win with real controls; record time, deaths, and aiming/camera friction.
-2. Tune first-duel damage, enemy pressure, and camera behavior using that playthrough.
-3. Add physical cover and biome-specific combat mechanics while keeping visual and collision placement synchronized.
-4. Repeat natural boss progression checks before claiming full-campaign pacing.
+1. Run final tests and package the production build, then verify the ZIP contains every magic texture.
+2. Push the tested commit and wait for Vercel and Pages to report successful builds of that SHA.
+3. Open the production Vercel URL, enter the first duel, and verify the generated assets load without errors.
+4. Publish v0.3.0 with the ZIP and verify its GitHub SHA-256 digest against the local file.
+5. Record completion, sync the final notes, and copy PROGRESS.md and PROJECT_STATE.md to task outputs.

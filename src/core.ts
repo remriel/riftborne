@@ -4,6 +4,17 @@ export const V=(x=0,y=0,z=0)=>new Vector3(x,y,z);
 export const clamp=(x:number,a:number,b:number)=>Math.max(a,Math.min(b,x));
 export const lerp=(a:number,b:number,t:number)=>a+(b-a)*t;
 export function segmentDistance(a:Vector3,b:Vector3,p:Vector3){const ab=b.clone().sub(a);const t=clamp(p.clone().sub(a).dot(ab)/Math.max(.0001,ab.lengthSq()),0,1);return a.clone().addScaledVector(ab,t).distanceTo(p);}
+// First entry along the segment, including a shot that starts inside the sphere.
+export function segmentSphereTime(a:Vector3,b:Vector3,center:Vector3,radius:number):number|null {
+ const offset=a.clone().sub(center),c=offset.lengthSq()-radius*radius;
+ if(c<=0)return 0;
+ const travel=b.clone().sub(a),lengthSq=travel.lengthSq();
+ if(lengthSq===0)return null;
+ const projection=offset.dot(travel),discriminant=projection*projection-lengthSq*c;
+ if(discriminant<0)return null;
+ const time=(-projection-Math.sqrt(discriminant))/lengthSq;
+ return time>=0&&time<=1?time:null;
+}
 export type Status=Partial<Record<Element,number>>;
 export interface Fighter {id:number;pos:Vector3;vel:Vector3;hp:number;maxHp:number;radius:number;status:Status;hurt:number;armor:number;frozen:number;stagger:number;dead:boolean;}
 export interface Player extends Fighter {yaw:number;pitch:number;grounded:boolean;jumps:number;energy:number;dodge:number;invulnerable:number;runeCD:number;runeTime:number;rune:Rune;hands:[Element,Element];primary:[number,number];secondary:[number,number];ultimate:number;dashTime:number;flight:number;}

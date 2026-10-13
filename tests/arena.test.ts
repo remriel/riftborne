@@ -34,8 +34,10 @@ test('later-realm waves leave room to enter and clear the previous hit flash', a
   try {
     for (let index = 1; index < ARENAS.length; index++) {
       game.player.hurt = 1;
+      game.lockOn = true;
       game.loadBiome(index);
       assert.equal(game.player.hurt, 0);
+      assert.equal(game.lockOn, false);
       assert.equal(game.enemies.length, 6);
       for (const enemy of game.enemies)
         assert.ok(enemy.pos.distanceTo(game.player.pos) > 8,
@@ -44,4 +46,21 @@ test('later-realm waves leave room to enter and clear the previous hit flash', a
   } finally {
     game.physics.world.free();
   }
+});
+
+test('lock-on stays off during sentinel waves and works once the guardian activates', async () => {
+  const game = new Game();
+  await game.init();
+  try {
+    game.loadBiome(1); game.state = 'playing';
+    game.input.pressed.add('KeyL'); game.update(1 / 60);
+    assert.equal(game.lockOn, false);
+    for (const enemy of game.enemies) enemy.dead = true;
+    game.update(1 / 60);
+    assert.equal(game.bossActive, true);
+    game.input.pressed.add('KeyL'); game.update(1 / 60);
+    assert.equal(game.lockOn, true);
+    game.start();
+    assert.equal(game.lockOn, false, 'a new run starts with manual aim');
+  } finally { game.physics.world.free(); }
 });

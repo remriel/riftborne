@@ -6,7 +6,11 @@
 - **Fonts:** Cormorant Garamond and Manrope through Google Fonts, with local system fallbacks. The fonts are the only optional remote runtime resource.
 - **Audio:** Original Web Audio synthesis in `src/audio.ts`; no third-party recordings.
 
-Terrain topology and arena assembly are original project code. Primitive rings and point sprites are used for spell VFX, danger telegraphs, and pickups, not character stand-ins.
+Terrain topology and arena assembly are original project code. Spell cores, sigils, trails, particles, danger markers, and pickup glows use generated transparent artwork rendered on sprites and texture cards. The particle pool and trail geometry are rendering surfaces for that artwork.
+
+## Radiant Magic — 2026-10-13
+
+Three original transparent PNG sources are preserved as `art/magic-projectiles-source.png`, `art/magic-sigils-source.png`, and `art/magic-trail-source.png`. Built-in OpenAI image generation produced six elemental cores, six annular sigils, and one monochrome filament trail. The resolved model snapshot was not exposed by the tool. Full prompts and processing notes are in `art/MAGIC_PROMPTS.md`. `scripts/process-magic-assets.mjs` packages the sources as 15 WebP textures in `public/assets/magic/`, preserving alpha. No existing game or commercial VFX assets were copied.
 
 ## September 2026 graphics update
 OpenAI-generated stone and six-material character atlas sources are in art/. Seven existing KayKit ruin meshes were finished in Blender. The playable mage and five bosses use Blender-remodeled source meshes, preserved source rigs/animations, and generated material surfaces; the Archon now has a distinct exported asset. Original source licenses continue to apply. Prompts and derivation notes: art/PROMPTS.md.

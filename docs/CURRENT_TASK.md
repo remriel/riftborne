@@ -43,3 +43,7 @@ Completed: v0.2.0 shipped on 2026-10-12. GitHub Pages booted into the first duel
 
 The existing `riftborne` project in the REMRIEL Vercel team deployed the current `master` branch to production. Deployment `dpl_CWxNm7wybXK19HcPg1T51sxkPa7S` reached `READY`, its production aliases were assigned, and `https://riftborne-gamma.vercel.app/` entered the first duel with zero browser errors. See `docs/PROJECT_STATE.md` and `docs/PROGRESS.md` for the durable handoff.
 
+## Radiant Magic — 2026-10-13
+
+The active update is v0.3.0: generated elemental magic cores, sigils, trails, sparks, blooms, and spell lighting, plus the verified combat contact and lock-on fixes. The user's GitHub-description request was canceled after they saw the Vercel link already there. Blender was not used for this spell pass; the assets are generated raster textures animated through Three.js. Read `docs/PROGRESS.md` for publication status.
+

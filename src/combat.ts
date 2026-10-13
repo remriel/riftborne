@@ -1,7 +1,11 @@
 import {SPELLS,type Element} from './config';
-import {V,segmentDistance,type Fighter,type Projectile,type Zone,type GameEvent} from './core';
+import {V,segmentDistance,segmentSphereTime,type Fighter,type Projectile,type Zone,type GameEvent} from './core';
 import {ElementInteractionSystem} from './interactions';
 import type {Game} from './game';
+type ProjectileImpact =
+ | {time:number;kind:'world';handle:number}
+ | {time:number;kind:'target';target:Fighter}
+ | {time:number;kind:'zone';zone:Zone};
 export class CombatSystem {
  interactions=new ElementInteractionSystem(); comboCount=0; totalDamage=0;
  damage(g:Game,target:Fighter,amount:number,element:Element,point=target.pos,combo=true){
@@ -46,24 +50,64 @@ export class CombatSystem {
   for(const prop of g.props)if(prop.hp>0&&prop.pos.distanceTo(pos)<radius+prop.radius){prop.hp-=damage;if(prop.hp<=0){g.physics.removeProp(prop.id);g.events.push({type:'burst',pos:prop.pos.clone(),element:'stone',size:4});g.addPickup(prop.pos,'charge');}}
   g.events.push({type:'burst',pos:pos.clone(),element:e,size:radius*.7});
  }
+ resolveProjectile(g:Game,p:Projectile){
+  const end=p.pos.clone(),travel=end.clone().sub(p.prev),length=travel.length();
+  const impacts:ProjectileImpact[]=[];
+  const worldHit=length>0?g.physics.ray(p.prev,travel.clone().normalize(),length):null;
+  if(worldHit)impacts.push({kind:'world',time:worldHit.timeOfImpact/length,handle:worldHit.collider.handle});
+  for(const target of p.owner==='player'?g.targets():[g.player]){
+   if(target.dead||p.hit.has(target.id))continue;
+   const center=target.pos.clone().add(V(0,target.id===1?g.bossHeight*.43:0,0));
+   const time=segmentSphereTime(p.prev,end,center,target.radius+p.radius);
+   if(time!==null)impacts.push({kind:'target',time,target});
+  }
+  for(const zone of g.zones){
+   if(zone.life<=0)continue;
+   const deflect=zone.element==='wind'&&p.owner!==zone.owner;
+   const react=zone.owner==='player'&&p.owner==='player'&&zone.element!==p.element&&this.interactions.resolve(p.element,zone.element as Element);
+   if(!deflect&&!react)continue;
+   const time=segmentSphereTime(p.prev,end,zone.pos,zone.radius+1);
+   if(time!==null)impacts.push({kind:'zone',time,zone});
+  }
+  // Terrain wins ties; non-piercing spells stop at the first encountered surface.
+  const priority={world:0,target:1,zone:2};
+  impacts.sort((a,b)=>a.time-b.time||priority[a.kind]-priority[b.kind]);
+  for(const impact of impacts){
+   p.pos.lerpVectors(p.prev,end,impact.time);
+   if(impact.kind==='world'){
+    const prop=g.props.find(o=>g.physics.propColliders.get(o.id)?.handle===impact.handle);
+    if(prop&&prop.hp>0){prop.hp-=p.damage;if(prop.hp<=0){g.physics.removeProp(prop.id);g.addPickup(prop.pos,'charge');g.events.push({type:'burst',pos:prop.pos.clone(),element:'stone',size:4});}}
+    return true;
+   }
+   if(impact.kind==='zone'){
+    const z=impact.zone;if(z.life<=0)continue;
+    if(z.element==='wind'&&p.owner!==z.owner){
+     p.vel.multiplyScalar(-1);p.owner=z.owner;p.prev.copy(p.pos);
+     g.events.push({type:'combo',text:'DEFLECTED',element:'wind'});
+     return false; // Continue from this point on the next step, on the new path.
+    }
+    const rule=this.interactions.resolve(p.element,z.element as Element);
+    if(rule){z.life=0;this.comboCount++;g.events.push({type:'combo',text:rule.name,pos:z.pos.clone(),element:p.element,size:5});this.explode(g,z.pos,z.radius+3,95*rule.multiplier,p.element,'player');if(rule.zone)this.zone(g,z.pos,rule.zone,z.radius,6,'player');return true;}
+   }else{
+    const target=impact.target;if(target.dead||p.hit.has(target.id))continue;
+    p.hit.add(target.id);this.damage(g,target,p.damage,p.element,p.pos);
+    if(p.element==='lightning'&&p.owner==='player'){let n=1+2*(g.mods.chain||0);for(const other of g.targets())if(other.id!==target.id&&other.pos.distanceTo(target.pos)<13&&n-->0)this.damage(g,other,p.damage*.65,'lightning');}
+    if(!(p.element==='frost'&&g.mods.pierce&&p.owner==='player'))return true;
+   }
+  }
+  p.pos.copy(end);return false;
+ }
  update(g:Game,dt:number){
   for(const t of [...g.targets(),g.player]){t.hurt=Math.max(0,t.hurt-dt);t.frozen=Math.max(0,t.frozen-dt);t.stagger=Math.max(0,t.stagger-dt);for(const e of Object.keys(t.status) as Element[]){t.status[e]=Math.max(0,t.status[e]!-dt);if(t.status[e]!<=0)delete t.status[e];}if(!t.dead){if(t.status.fire)t.hp=Math.max(1,t.hp-6*dt);if(t.status.toxic)t.hp=Math.max(1,t.hp-9*dt);}}
   for(let i=0;i<2;i++){g.player.primary[i]=Math.max(0,g.player.primary[i]-dt);g.player.secondary[i]=Math.max(0,g.player.secondary[i]-dt);}
-  for(const p of g.projectiles){p.life-=dt;p.prev.copy(p.pos);p.vel.y-=SPELLS[p.element].gravity*dt;p.pos.addScaledVector(p.vel,dt);
-   let hit=false;
-   for(const z of g.zones){if(z.life<=0||p.pos.distanceTo(z.pos)>z.radius+1)continue;
-    if(z.element==='wind'&&p.owner!==z.owner){p.vel.multiplyScalar(-1);p.owner=z.owner;p.pos.addScaledVector(p.vel,dt);g.events.push({type:'combo',text:'DEFLECTED',element:'wind'});}
-    if(z.owner==='player'&&p.owner==='player'&&['fire','frost','stone','wind','toxic','lightning'].includes(z.element)&&z.element!==p.element){const rule=this.interactions.resolve(p.element,z.element as Element);if(rule){z.life=0;this.comboCount++;g.events.push({type:'combo',text:rule.name,pos:z.pos.clone(),element:p.element,size:5});this.explode(g,z.pos,z.radius+3,95*rule.multiplier,p.element,'player');if(rule.zone)this.zone(g,z.pos,rule.zone,z.radius,6,'player');hit=true;break;}}
-   }
-   for(const t of p.owner==='player'?g.targets():[g.player]){if(t.dead||p.hit.has(t.id))continue;const center=t.pos.clone().add(V(0,t.id===1?g.bossHeight*.43:0,0));if(segmentDistance(p.prev,p.pos,center)<t.radius+p.radius){p.hit.add(t.id);this.damage(g,t,p.damage,p.element,p.pos);if(p.element==='lightning'){let n=1+2*(g.mods.chain||0);for(const other of g.targets())if(other.id!==t.id&&other.pos.distanceTo(t.pos)<13&&n-->0)this.damage(g,other,p.damage*.65,'lightning');}if(!(p.element==='frost'&&g.mods.pierce&&p.owner==='player'))hit=true;}}
-   const travel=p.pos.clone().sub(p.prev),len=travel.length();const worldHit=len>0?g.physics.ray(p.prev,travel.normalize(),len):null;
-   if(worldHit){const prop=g.props.find(o=>g.physics.propColliders.get(o.id)?.handle===worldHit.collider.handle);if(prop){prop.hp-=p.damage;if(prop.hp<=0){g.physics.removeProp(prop.id);g.addPickup(prop.pos,'charge');}}hit=true;}
+  for(const p of g.projectiles){p.life-=dt;if(p.life<=0)continue;p.prev.copy(p.pos);p.vel.y-=SPELLS[p.element].gravity*dt;p.pos.addScaledVector(p.vel,dt);
+   const hit=this.resolveProjectile(g,p);
    if(hit){if(p.heavy||SPELLS[p.element].splash>2)this.explode(g,p.pos,SPELLS[p.element].splash,p.damage*.35,p.element,p.owner);if(p.heavy||p.element==='toxic')this.zone(g,p.pos,p.element,p.heavy?4:2.2,p.heavy?6:3,p.owner);if(p.element==='stone'&&g.mods.fragment&&p.owner==='player')this.explode(g,p.pos,5,40,'stone','player');p.life=0;}
   }
   // Opposed projectiles can intercept each other; wind redirects instead of deleting.
   for(let i=0;i<g.projectiles.length;i++){const a=g.projectiles[i];if(a.owner!=='player'||a.life<=0)continue;for(let j=0;j<g.projectiles.length;j++){const b=g.projectiles[j];if(b.owner!=='enemy'||b.life<=0)continue;if(segmentDistance(a.prev,a.pos,b.pos)<a.radius+b.radius+.3){if(a.element==='wind'){b.owner='player';b.vel.multiplyScalar(-1);}else{a.life=0;b.life=0;g.events.push({type:'burst',pos:b.pos.clone(),element:a.element,size:2});}break;}}}
   g.projectiles=g.projectiles.filter(p=>p.life>0);
-  for(const z of g.zones){z.life-=dt;z.pos.addScaledVector(z.vel,dt);z.tick-=dt;if(z.tick<=0){z.tick=.5;const e:Element=z.element==='lava'||z.element==='firestorm'?'fire':z.element==='poisonstorm'?'toxic':z.element==='steam'?'frost':z.element;for(const t of z.owner==='player'?g.targets():[g.player]){const dy=Math.abs(t.pos.y-z.pos.y);if(Math.hypot(t.pos.x-z.pos.x,t.pos.z-z.pos.z)<z.radius+t.radius&&dy<(z.element.includes('storm')||z.element==='wind'?15:5)){this.damage(g,t,z.element==='steam'?3:z.element==='wind'?10:15,e);if(e==='wind')t.vel.y+=5;}}}}
+  for(const z of g.zones){z.life-=dt;if(z.life<=0)continue;z.pos.addScaledVector(z.vel,dt);z.tick-=dt;if(z.tick<=0){z.tick=.5;const e:Element=z.element==='lava'||z.element==='firestorm'?'fire':z.element==='poisonstorm'?'toxic':z.element==='steam'?'frost':z.element;for(const t of z.owner==='player'?g.targets():[g.player]){const dy=Math.abs(t.pos.y-z.pos.y);if(Math.hypot(t.pos.x-z.pos.x,t.pos.z-z.pos.z)<z.radius+t.radius&&dy<(z.element.includes('storm')||z.element==='wind'?15:5)){this.damage(g,t,z.element==='steam'?3:z.element==='wind'?10:15,e);if(e==='wind')t.vel.y+=5;}}}}
   g.zones=g.zones.filter(z=>z.life>0);
  }
 }

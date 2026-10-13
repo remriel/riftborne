@@ -1,5 +1,7 @@
 param([string]$OutputPath)
 
+$ErrorActionPreference = 'Stop'
+
 $repoRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $stage = [System.IO.Path]::GetFullPath((Join-Path $repoRoot 'output/release-stage'))
 $workspacePrefix = $repoRoot.TrimEnd('\', '/') + [System.IO.Path]::DirectorySeparatorChar

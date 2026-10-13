@@ -53,3 +53,11 @@ The player and all five bosses now load separate remodeled GLBs: hood/cowl and e
 
 The Gardens keep a broken crescent of terraces. Cinderwatch has opposed battlements and gates, the Glass Peaks rise in a staggered diagonal, the Hollow Marsh has low scattered islets, and the Aether Citadel has mirrored plazas and balconies. Later-realm enemy waves now begin farther from the entry point, and the player hit flash clears on transition. The Pages build also uses relative asset URLs so it works at the repository's project path.
 
+## Combat fixes included in v0.3.0
+
+Projectiles resolve contacts in travel order. Terrain and destructible props stop direct hits, ordinary bolts stop at the nearest target, and Winter Needle pierces enemies while respecting terrain. Wind deflection starts at its contact point. Expired spells no longer deal a final hit, and enemy lightning no longer chains into its own team. Lock-on clears between realms and remains unavailable while the guardian is sealed behind a sentinel encounter. Splash damage remains an area effect without wall occlusion.
+
+## Radiant Magic · v0.3.0
+
+All six elements now use original generated energy cores and sigils: curling fire, crystalline frost, branching lightning, mineral shards, airy wind ribbons, and toxic plasma. Projectiles leave curved filament trails; spell zones layer rotating sigils and rising wisps; impacts expand into fading blooms and sparks. Spell light and bloom bring the effects into the arena, and hostile ground markers keep a red boundary. The v0.2.1 combat fixes above are included in this release.
+
