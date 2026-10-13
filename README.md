@@ -2,7 +2,7 @@
 
 ![Riftborne elemental arena playtest](docs/playtest-arena.png)
 
-**[Play Riftborne in your browser](https://riftborne-gamma.vercel.app/)**
+**[Browser preview](https://riftborne-gamma.vercel.app/)** · [Offline Windows download](https://github.com/remriel/riftborne/releases/latest) · [Controls](#controls)
 
 A playable desktop-browser alpha of an original single-player elemental arena game based on Spellbreak.
 
@@ -65,3 +65,7 @@ Projectiles resolve contacts in travel order. Terrain and destructible props sto
 
 All six elements now use original generated energy cores and sigils: curling fire, crystalline frost, branching lightning, mineral shards, airy wind ribbons, and toxic plasma. Projectiles leave curved filament trails; spell zones layer rotating sigils and rising wisps; impacts expand into fading blooms and sparks. Spell light and bloom bring the effects into the arena, and hostile ground markers keep a red boundary. The v0.2.1 combat fixes above are included in this release.
 
+## Other browser games
+
+- [Apex Type](https://github.com/remriel/apex-type): a Three.js typing racer with classic cars and multiplayer rooms.
+- [Katamari Neighborhood](https://github.com/remriel/katamari-neighborhood): a rolling, object-collecting 3D browser game inspired by Katamari.
