@@ -1,5 +1,9 @@
 # Playtest — 2026-09-07
 
+## Blast cover development check — 2026-11-06
+
+The production build was opened in a local Chromium session with software WebGL and bloom disabled. The title screen and first arena were visually inspected. Actual keyboard input moved the character from z=16 to z=14.89, and a mouse press created a projectile. This was a short boot and controls smoke test, not a human playthrough or a complete duel. No page exceptions were observed. Local Vite preview returned 404 for the Vercel Analytics script endpoint, which requires the Vercel environment. Automated combat tests separately verified the cover rules; the browser smoke test did not stage covered combat.
+
 ## Combat correctness pass — 2026-10-12
 
 Two standard-difficulty Chromium playthroughs used actual keyboard and mouse events: boss lock-on, alternating strafing, dual casting, secondaries, overdrive, jump, and dodge. Both reached the first upgrade screen. No QA state mutation, reduced boss health, invulnerability, or simulation acceleration was used.

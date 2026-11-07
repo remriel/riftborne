@@ -1,6 +1,15 @@
 # Riftborne project state
 
-Updated: 2026-10-13
+Updated: 2026-11-06
+
+## Current development slice — blast cover
+
+- Work started from `remriel/riftborne` `master` at `4b086da` on branch `codex/riftborne-splash-occlusion`. Vercel's existing project builds `master` for production; branch work must not be confused with a live release.
+- `CombatSystem.explode` now checks visibility for player and enemy blast targets against Rapier terrain and props. `ArenaPhysics.blastVisible` samples the target center toward the blast and stops 0.02 world units short of its origin, so a wall impact can affect its exposed side without passing through the wall. A prop's own collider is excluded for its visibility query.
+- Damage eligibility for all props is resolved before prop removal. Removal is deferred through all explosion components of one projectile impact, including stone fragments and zone reactions. Thus a prop can shield the same impact that destroys it; it is removed before the next projectile.
+- Coverage is deliberately limited to `explode`: lingering zone ticks, frost's separate area freeze, lightning chains, and other attacks retain their previous rules. Decorative ruins still do not provide collision cover. Center sampling is a conservative approximation for partially exposed targets; it is not a full volume visibility test.
+- Seven new `tests/splash.test.ts` cases cover both owners, direct wall impacts, floor-level blasts, destructible props, same-impact shielding, and later shots. Four of the initial six cases failed before implementation; the fragment follow-up also reproduced an intermediate defect before removal was deferred.
+- Vite was updated from locked 7.3.6 to 7.3.7 to address the reported development-server advisories. The full npm audit now reports zero vulnerabilities.
 
 Release status: [v0.3.0 Radiant Magic](https://github.com/remriel/riftborne/releases/tag/v0.3.0) is published from commit `dd7187a7391b26eef2e1ad86fb1300a7df58e595`. The Windows ZIP is 22,319,009 bytes; SHA-256 `c5513fce64942a3767e210ee9646e7158bd7e60b20d4faffc2356615a1436d19` matches the GitHub release asset digest. All 60 packaged files were compared to the build, including the 15 magic textures.
 
@@ -63,4 +72,4 @@ Vercel status: the `riftborne` project in REMRIEL (`team_sS8RTjB1ldRc5jnptpOKb2X
 
 ## RESUME HERE
 
-v0.3.0 Radiant Magic is released on GitHub, Vercel, and Pages. The generated source PNGs and exact prompt set are in art/; 15 processed textures ship under public/assets/magic/. Combat contact and lock-on fixes have 16 passing tests. Normal browser input verified a first-boss win and a sentinel transition; staged QA scenes verified the six visual families, and a stress check verified effect caps and cleanup. Full human difficulty and campaign pacing remain unvalidated. The first duel can take only 13–23 seconds with automated dual casting, and reaction zones can overlap heavily; investigate reaction-zone feedback before tuning boss HP blindly. Prioritize later-boss playthroughs, pacing, physical stone cover, and splash occlusion next. Read docs/PROGRESS.md. The final documentation sync does not change runtime code.
+The cover-aware explosion slice is implemented on `codex/riftborne-splash-occlusion`; read `docs/PROGRESS.md` for its latest verification and publishing state. The released v0.3.0 baseline remains on `master` until deliberately merged. Next, validate partial cover and performance during actual play; examine lingering zones and other area attacks separately before describing cover as universal. Full human difficulty and campaign pacing remain unvalidated. The first duel previously took 13–23 seconds with automated dual casting, and reaction zones can overlap heavily; investigate those interactions before changing boss HP. Physical stone cover and later-boss playthroughs remain future work.

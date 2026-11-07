@@ -59,7 +59,11 @@ The Gardens keep a broken crescent of terraces. Cinderwatch has opposed battleme
 
 ## Combat fixes included in v0.3.0
 
-Projectiles resolve contacts in travel order. Terrain and destructible props stop direct hits, ordinary bolts stop at the nearest target, and Winter Needle pierces enemies while respecting terrain. Wind deflection starts at its contact point. Expired spells no longer deal a final hit, and enemy lightning no longer chains into its own team. Lock-on clears between realms and remains unavailable while the guardian is sealed behind a sentinel encounter. Splash damage remains an area effect without wall occlusion.
+Projectiles resolve contacts in travel order. Terrain and destructible props stop direct hits, ordinary bolts stop at the nearest target, and Winter Needle pierces enemies while respecting terrain. Wind deflection starts at its contact point. Expired spells no longer deal a final hit, and enemy lightning no longer chains into its own team. Lock-on clears between realms and remains unavailable while the guardian is sealed behind a sentinel encounter. The v0.3.0 release did not include splash occlusion.
+
+## In development · blast cover
+
+Explosions now check line of sight against physical terrain and destructible props for both sides of combat. A prop broken by an impact shields targets from that same impact; subsequent shots can pass through. Visibility is sampled at each target's center. Lingering zones, frost's area freeze, and other attack types have their existing behavior, and decorative ruins without colliders do not provide cover.
 
 ## Radiant Magic · v0.3.0
 

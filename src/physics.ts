@@ -22,6 +22,14 @@ export class ArenaPhysics {
  move(pos:Vector3,delta:Vector3){this.body.setTranslation(pos,true);this.controller.computeColliderMovement(this.collider,delta);const d=this.controller.computedMovement();const next=pos.clone().add(V(d.x,d.y,d.z));this.body.setNextKinematicTranslation(next);this.world.step();return {pos:next,grounded:this.controller.computedGrounded()};}
  teleport(pos:Vector3){this.body.setTranslation(pos,true);this.body.setNextKinematicTranslation(pos);}
  ray(origin:Vector3,direction:Vector3,max:number){return this.world.castRay(new RAPIER.Ray(origin,direction),max,true,undefined,undefined,this.collider);}
+ // Cast from the target toward the blast: a blast on a wall face should still
+ // reach the exposed side, while a ray through the wall hits its far face.
+ blastVisible(blast:Vector3,target:Vector3,ignore?:RAPIER.Collider){
+  const direction=blast.clone().sub(target),distance=direction.length();
+  if(distance<=.02)return true;
+  direction.multiplyScalar(1/distance);
+  return !this.world.castRay(new RAPIER.Ray(target,direction),distance-.02,true,undefined,undefined,this.collider,undefined,ignore?c=>c.handle!==ignore.handle:undefined);
+ }
  floor(x:number,z:number){let y=-20;for(const p of this.platforms){if(Math.abs(x-p.pos.x)<p.size.x/2&&Math.abs(z-p.pos.z)<p.size.z/2)y=Math.max(y,p.pos.y+p.size.y/2);}return y;}
 }
 
