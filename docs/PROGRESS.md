@@ -1,12 +1,12 @@
 # Riftborne progress
 
-Updated: 2026-11-06
+Updated: 2026-11-07
 
 ## Current objective
 
 Continue Riftborne with a verified combat improvement: explosions should respect physical cover, and the work should be synchronized to GitHub and tested through the existing Vercel integration.
 
-**Progress: 90%** — implementation, regression suite, production build, dependency audit, and local browser checks passed; remote synchronization and preview verification remain.
+**Progress: 100%** for this development slice — implementation, local checks, GitHub synchronization, and authenticated Vercel preview response checks are complete. Production publication remains a separate decision.
 
 ## Checklist
 
@@ -17,8 +17,8 @@ Continue Riftborne with a verified combat improvement: explosions should respect
 - [x] Update Vite 7.3.6 to 7.3.7 and confirm the dependency audit is clean.
 - [x] Run the full test suite and production build.
 - [x] Inspect browser screenshots and verify movement, casting, and boot locally.
-- [ ] Synchronize the development branch with GitHub and verify its Vercel preview.
-- [ ] Record final deployment state, limitations, and ordered next steps.
+- [x] Synchronize the development branch with GitHub and verify its Vercel preview.
+- [x] Record deployment state, limitations, and ordered next steps.
 
 ## Implementation and verification
 
@@ -28,12 +28,14 @@ The test suite passes **23/23** tests. The production build passes with the exis
 
 The previously published [v0.3.0 Radiant Magic](https://github.com/remriel/riftborne/releases/tag/v0.3.0) remains the release baseline. This development branch is not a new release.
 
+GitHub draft PR: https://github.com/remriel/riftborne/pull/2. Vercel preview deployment `dpl_H45ytG4qBqfjAFZWP6gSJ9p6PozZ` reached READY for code commit `fb4ef2feae0f3e7128479bedc068e0849761a8c9`. Authenticated checks returned the game HTML, matching JavaScript and CSS, and analytics script with HTTP 200. Preview access requires Vercel sign-in; a browser playthrough of the remote preview was not performed. Production was not updated.
+
 ## Blockers and limitations
 
 None known for the local implementation. Center-point visibility may judge a partially exposed target as covered. Lingering zones, the frost area freeze, lightning chains, other area attacks, and non-colliding decorative ruins are not covered by the new explosion rule. Physical stone cover and a natural full-campaign balance playtest remain outstanding.
 
 ## Exact ordered next steps
 
-1. Push this branch and inspect the matching Vercel preview deployment.
-2. Record the exact remote commit, preview status, verification evidence, and outstanding limits here and in `WISDOM.MD`.
+1. Review the draft PR and test the protected Vercel preview in an authenticated browser.
+2. If approved for release, merge to master and verify the resulting production Vercel and Pages deployments.
 3. Evaluate lingering area effects and partially exposed targets in play before expanding the cover rules; measure later bosses before changing balance.

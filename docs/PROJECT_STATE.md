@@ -1,6 +1,6 @@
 # Riftborne project state
 
-Updated: 2026-11-06
+Updated: 2026-11-07
 
 ## Current development slice — blast cover
 
@@ -10,6 +10,7 @@ Updated: 2026-11-06
 - Coverage is deliberately limited to `explode`: lingering zone ticks, frost's separate area freeze, lightning chains, and other attacks retain their previous rules. Decorative ruins still do not provide collision cover. Center sampling is a conservative approximation for partially exposed targets; it is not a full volume visibility test.
 - Seven new `tests/splash.test.ts` cases cover both owners, direct wall impacts, floor-level blasts, destructible props, same-impact shielding, and later shots. Four of the initial six cases failed before implementation; the fragment follow-up also reproduced an intermediate defect before removal was deferred.
 - Vite was updated from locked 7.3.6 to 7.3.7 to address the reported development-server advisories. The full npm audit now reports zero vulnerabilities.
+- Draft PR #2 is on GitHub. Vercel preview `dpl_H45ytG4qBqfjAFZWP6gSJ9p6PozZ` built code commit `fb4ef2f`; authenticated HTTP checks returned the expected game assets. The preview requires sign-in and was not browser-playtested remotely. The public production branch has not been updated.
 
 Release status: [v0.3.0 Radiant Magic](https://github.com/remriel/riftborne/releases/tag/v0.3.0) is published from commit `dd7187a7391b26eef2e1ad86fb1300a7df58e595`. The Windows ZIP is 22,319,009 bytes; SHA-256 `c5513fce64942a3767e210ee9646e7158bd7e60b20d4faffc2356615a1436d19` matches the GitHub release asset digest. All 60 packaged files were compared to the build, including the 15 magic textures.
 

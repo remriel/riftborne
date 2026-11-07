@@ -6,4 +6,4 @@
 2. **Biggest missing context:** Only explosions use the new cover rule. Lingering zones, frost's area freeze, lightning chains, and boss attacks still have their previous behavior, while decorative ruin pieces without colliders never block damage. I would test those cases explicitly before describing cover as a universal mechanic.
 3. **Most consequential assumption:** Physical cover should fully block explosion damage instead of merely reducing it. If playtests show that this makes the fast elemental combat frustrating, I would test partial damage or another rule before changing the balance broadly.
 
-GitHub branch and Vercel preview verification are still pending at this checkpoint.
+The branch is in GitHub draft PR #2. Its Vercel preview built successfully and returned the expected assets through authenticated HTTP checks; a remote browser playthrough remains unverified. Production is unchanged.
