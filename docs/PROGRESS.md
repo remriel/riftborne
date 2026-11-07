@@ -1,56 +1,41 @@
 # Riftborne progress
 
-Updated: 2026-10-13
+Updated: 2026-11-07
 
 ## Current objective
 
-Ship v0.3.0 Radiant Magic: beautiful luminous spell effects for all six elements, including the verified combat contact and lock-on fixes, on Vercel and as a GitHub release.
+Continue Riftborne with a verified combat improvement: explosions should respect physical cover, and the work should be synchronized to GitHub and tested through the existing Vercel integration.
 
-**Progress: 100%** — v0.3.0 Radiant Magic is published and verified on GitHub and Vercel.
+**Progress: 100%** for this development slice — implementation, local checks, GitHub synchronization, and authenticated Vercel preview response checks are complete. Production publication remains a separate decision.
 
 ## Checklist
 
-- [x] Reconcile repository, Git state, handoff, source, and tests.
-- [x] Complete normal-input first-boss wins without QA combat mutations or accelerated simulation.
-- [x] Reproduce seven combat failures before fixing ordered impacts, piercing, expired spells, and enemy lightning ownership.
-- [x] Clear lock-on between realms and gate it during sentinel waves.
-- [x] Generate three original transparent source images and package 15 runtime textures.
-- [x] Integrate elemental cores, curved filament trails, rotating sigils, wisps, sparks, impact blooms, bloom, and bounded spell lights.
-- [x] Review all six elements in staged arena screenshots and check the new effects during a live duel.
-- [x] Verify a normal-input upgrade transition keeps lock-on off during the sentinel encounter.
-- [x] Confirm 100 emitted bursts respect the 32-burst and 2,200-particle caps and clean up to the original scene size.
-- [x] Final tests, production build, and Windows package verification.
-- [x] Push and confirm Vercel/Pages production builds and public browser boot.
-- [x] Publish v0.3.0, verify its ZIP digest, and synchronize final handoff files.
+- [x] Locate the correct repository and reconcile its source, Git state, and previous handoff.
+- [x] Reproduce player and enemy explosions passing through terrain and destructible cover.
+- [x] Implement cover checks and preserve destructible shielding throughout an impact.
+- [x] Add seven focused regression tests and retain all earlier tests.
+- [x] Update Vite 7.3.6 to 7.3.7 and confirm the dependency audit is clean.
+- [x] Run the full test suite and production build.
+- [x] Inspect browser screenshots and verify movement, casting, and boot locally.
+- [x] Synchronize the development branch with GitHub and verify its Vercel preview.
+- [x] Record deployment state, limitations, and ordered next steps.
 
-## Implementation state
+## Implementation and verification
 
-`src/magic-vfx.ts` owns the generated-texture VFX runtime. `src/vfx.ts` re-exports it. `AssetLibrary` loads 15 new alpha-preserving WebPs from `public/assets/magic/`. Source PNGs and complete prompts are preserved in `art/`; the processing script is `scripts/process-magic-assets.mjs`.
+Explosions now test line of sight to each fighter or prop center against physical Rapier colliders. A target on the exposed side of an impact can still take damage; a prop destroyed during an impact stays protective until that impact is resolved. See `docs/PROJECT_STATE.md` for the geometry and deferred-removal details.
 
-Combat resolves contacts by their first intersection along each projectile step. Terrain wins ties; normal bolts stop at the first target and Winter Needle retains its per-target hit set while respecting terrain. Consumed or expired spell zones receive no final damage tick. Lock-on resets at realm loads and cannot engage on a sealed boss.
+The test suite passes **23/23** tests. The production build passes with the existing large-bundle warning. The full npm audit reports zero vulnerabilities. A Chromium software-rendered browser run loaded the title and arena, moved from z=16 to z=14.89 with keyboard input, and spawned a spell with a mouse press; title and duel screenshots were inspected. No page exceptions occurred. Standalone Vite preview returned 404 for Vercel Analytics' `/_vercel/insights/script.js` endpoint, which is not supplied by the local preview server. The Rapier initialization deprecation warning remains.
 
-## Verification
+The previously published [v0.3.0 Radiant Magic](https://github.com/remriel/riftborne/releases/tag/v0.3.0) remains the release baseline. This development branch is not a new release.
 
-- All 16 combat/arena tests passed after the final combat changes. The first seven new regression cases failed on the prior implementation.
-- All six magic families were inspected in staged QA screenshots. A separate live keyboard/mouse run reached the upgrade screen at 00:13 with 115/160 health and entered Cinderwatch with lock-on off.
-- The staged six-element scenes used roughly 108 draw calls. Busy live samples reached 664 draw calls and approximately 31–34 ms frame intervals on this host; this is not a portable GPU benchmark.
-- A 100-burst cleanup check respected the caps and returned to 0 active effects and the original 44 scene children. Bloom-disabled rendering completed.
-- Browser console: zero errors; existing Rapier initialization warning remains.
+GitHub draft PR: https://github.com/remriel/riftborne/pull/2. Vercel preview deployment `dpl_H45ytG4qBqfjAFZWP6gSJ9p6PozZ` reached READY for code commit `fb4ef2feae0f3e7128479bedc068e0849761a8c9`. Authenticated checks returned the game HTML, matching JavaScript and CSS, and analytics script with HTTP 200. Preview access requires Vercel sign-in; a browser playthrough of the remote preview was not performed. Production was not updated.
 
-- Final tests: 16 passed. Production build passed. npm audit: zero vulnerabilities. All 60 packaged files match the build, including 15 magic textures. Windows ZIP: 22,319,009 bytes; SHA-256 c5513fce64942a3767e210ee9646e7158bd7e60b20d4faffc2356615a1436d19.
+## Blockers and limitations
 
-- Release commit: dd7187a7391b26eef2e1ad86fb1300a7df58e595. Vercel production deployment dpl_CWDQzfjykhuVonsqqLrqf7JwzsT3 is READY with aliases assigned. GitHub Pages workflow 38431277415 succeeded. The public Vercel browser loaded all 15 generated assets and cast in the first duel with zero errors.
-- Published release: https://github.com/remriel/riftborne/releases/tag/v0.3.0. The uploaded ZIP digest matches the local package.
-
-## Blockers and limits
-
-None. Full-campaign pacing, human difficulty, splash damage occlusion, physical stone cover, and decorative wall collisions remain unresolved. The first duel can be very short with automated dual casting and reactions; balance needs a separate measured pass.
+None known for the local implementation. Center-point visibility may judge a partially exposed target as covered. Lingering zones, the frost area freeze, lightning chains, other area attacks, and non-colliding decorative ruins are not covered by the new explosion rule. Physical stone cover and a natural full-campaign balance playtest remain outstanding.
 
 ## Exact ordered next steps
 
-The current release objective is complete. For the next development pass:
-
-1. Measure later-boss encounters with normal input and record deaths, time, and aiming friction.
-2. Investigate the short first-duel time and overlapping reaction-zone damage before setting a campaign pacing target.
-3. Implement physical stone cover and splash occlusion with synchronized render/collision placement.
-4. Recheck normal campaign progression before claiming full 30–60 minute pacing.
+1. Review the draft PR and test the protected Vercel preview in an authenticated browser.
+2. If approved for release, merge to master and verify the resulting production Vercel and Pages deployments.
+3. Evaluate lingering area effects and partially exposed targets in play before expanding the cover rules; measure later bosses before changing balance.
