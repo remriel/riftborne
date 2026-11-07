@@ -6,7 +6,7 @@ Updated: 2026-11-07
 
 Continue Riftborne with a verified combat improvement: explosions should respect physical cover, and the work should be synchronized to GitHub and tested through the existing Vercel integration.
 
-**Progress: 100%** for this development slice — implementation, local checks, GitHub synchronization, and authenticated Vercel preview response checks are complete. Production publication remains a separate decision.
+**Progress: 100%** for this development slice — implementation, local checks, GitHub synchronization, and Vercel production publication are complete.
 
 ## Checklist
 
@@ -26,9 +26,9 @@ Explosions now test line of sight to each fighter or prop center against physica
 
 The test suite passes **23/23** tests. The production build passes with the existing large-bundle warning. The full npm audit reports zero vulnerabilities. A Chromium software-rendered browser run loaded the title and arena, moved from z=16 to z=14.89 with keyboard input, and spawned a spell with a mouse press; title and duel screenshots were inspected. No page exceptions occurred. Standalone Vite preview returned 404 for Vercel Analytics' `/_vercel/insights/script.js` endpoint, which is not supplied by the local preview server. The Rapier initialization deprecation warning remains.
 
-The previously published [v0.3.0 Radiant Magic](https://github.com/remriel/riftborne/releases/tag/v0.3.0) remains the release baseline. This development branch is not a new release.
+The previously published [v0.3.0 Radiant Magic](https://github.com/remriel/riftborne/releases/tag/v0.3.0) remains the latest downloadable release; this production update has not been packaged as a new release.
 
-GitHub draft PR: https://github.com/remriel/riftborne/pull/2. Vercel preview deployment `dpl_H45ytG4qBqfjAFZWP6gSJ9p6PozZ` reached READY for code commit `fb4ef2feae0f3e7128479bedc068e0849761a8c9`. Authenticated checks returned the game HTML, matching JavaScript and CSS, and analytics script with HTTP 200. Preview access requires Vercel sign-in; a browser playthrough of the remote preview was not performed. Production was not updated.
+GitHub PR https://github.com/remriel/riftborne/pull/2 was merged as `efacd31e01c8201b06e7afb90a1ef95b4c7877c6`. Vercel production deployment `dpl_BFohh9CL2q7BqRis6MfqjhmmFmtV` reached READY. The public https://riftborne-gamma.vercel.app/ returned HTTP 200 and served the expected cover-aware JavaScript bundle. A remote browser playthrough was not performed. GitHub Pages run 42393813012 was still in progress at this checkpoint.
 
 ## Blockers and limitations
 
@@ -36,6 +36,5 @@ None known for the local implementation. Center-point visibility may judge a par
 
 ## Exact ordered next steps
 
-1. Review the draft PR and test the protected Vercel preview in an authenticated browser.
-2. If approved for release, merge to master and verify the resulting production Vercel and Pages deployments.
-3. Evaluate lingering area effects and partially exposed targets in play before expanding the cover rules; measure later bosses before changing balance.
+1. Confirm the GitHub Pages workflow result and test the production game in a browser.
+2. Evaluate lingering area effects and partially exposed targets in play before expanding the cover rules; measure later bosses before changing balance.
