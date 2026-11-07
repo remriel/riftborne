@@ -11,14 +11,15 @@ export class CombatSystem {
  damage(g:Game,target:Fighter,amount:number,element:Element,point=target.pos,combo=true){
   if(target.dead)return;
   const player=target.id===0;if(player&&g.player.invulnerable>0)return;
-  let damage=amount;
+  let damage=amount;let coreStrike=false;
   if(!player){damage*=g.damageMultiplier;const previous=(Object.entries(target.status) as [Element,number][]).filter(([e,t])=>e!==element&&t>0).sort((a,b)=>b[1]-a[1])[0];
    if(previous&&combo){const rule=this.interactions.resolve(element,previous[0]);if(rule){damage*=rule.multiplier;delete target.status[previous[0]];this.comboCount++;g.events.push({type:'combo',pos:point.clone(),text:rule.name,element,value:damage,size:3});if(rule.zone)this.zone(g,point,rule.zone,4,4,'player');if(rule.force)target.vel.add(point.clone().sub(g.player.pos).normalize().multiplyScalar(rule.force));}}
    if(target.frozen>0&&(element==='fire'||element==='stone')){damage*=1.7;target.frozen=0;target.stagger=.9;}
    if(target.armor>0){const breakage=element==='stone'?damage*2:element==='fire'&&g.boss.index===2?damage*3:damage*.6;target.armor=Math.max(0,target.armor-breakage);damage*=.65;}
-   if(target.id===1&&g.boss.weak>0&&point.y>target.pos.y+g.bossHeight*.35){damage*=1.7;g.events.push({type:'hit',text:'CORE STRIKE',element,pos:point.clone(),value:damage});}
+   if(target.id===1&&g.boss.weak>0&&point.y>target.pos.y+g.bossHeight*.35){damage*=1.7;coreStrike=true;}
    target.status[element]=element==='frost'?4:3; if(element==='frost'){target.frozen=Math.min(2,target.frozen+.24);}
    if(element==='wind'){target.vel.add(target.pos.clone().sub(g.player.pos).normalize().multiplyScalar(5));}
+   g.events.push({type:'hit',text:coreStrike?'CORE STRIKE':undefined,pos:point.clone(),element,value:damage});
    this.totalDamage+=damage;g.player.ultimate=Math.min(100,g.player.ultimate+damage*.018);
   }else{damage*=g.difficulty;g.player.invulnerable=.22;g.events.push({type:'hit',value:damage,element});}
   target.hp=Math.max(0,target.hp-damage);target.hurt=.12;

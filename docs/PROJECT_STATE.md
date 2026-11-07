@@ -2,6 +2,20 @@
 
 Updated: 2026-11-07
 
+## Current development slice — clarity and control
+
+- User requested AAA quality via Codex Game Studio plus GitHub/Vercel deployment. This release is a bounded quality increment, not a claim that the game now meets full AAA production scope.
+- `production/polish-plan.md` records sequential studio discipline responsibilities and acceptance gates. The source CGS checkout is the Postmarked/template workspace; Riftborne remains at `D:/Codex/2026-11-06/riftborne`. Do not initialize it as Godot/Unity/Unreal: its actual engine is Three.js/Rapier.
+- `src/preferences.ts` validates legacy/persisted settings and honors OS reduced-motion preference by default. `src/ui-polish.ts` owns settings, action-based hints, hit flash timing and the boss attack countdown; `src/ui.ts` retains campaign/menu state.
+- `src/combat.ts` now emits one positional hit event per successful enemy damage application, including core-strike labeling. Damage values and rules are unchanged. `src/audio.ts` throttles the new impact confirmation tone to avoid stacked voices.
+- `src/render.ts` performance mode caps DPR at 1 and disables shadows, bloom and extra zone layers. Reduced motion suppresses camera shake/dash zoom. Dead sentinel actors dispose private material and animation resources without disposing shared asset geometry/textures.
+- `src/polish.css` improves HUD readability and short-window layout while keeping the existing game's gold/teal style. Existing finished assets are reused; no new art was generated in this slice.
+- Menu Tab now cycles focus instead of resuming gameplay; accumulated mouse deltas clear on release/resume. Title-screen keyboard navigation remains available.
+- Regression tests: 28 passing, including input, preferences and normal/core/invulnerable hit cases. TypeScript and the Vite production build pass; existing large-chunk and Rapier initialization deprecation warnings remain.
+- Immutable production-preview browser gate passed at 800x450: zero page errors or failed requests; settings survived reload; modal Tab focus wrapped; movement, jump, lock-on, dual-cast damage (24.57), pause, and loadout selection passed. Player position changed from z=16 to z=10.78 and jump reached y=3.36. Desktop and small-viewport screenshots were inspected; settings scroll within the panel. These software-rendered host frame timings are not representative hardware-GPU benchmarks, and audio quality was not human-reviewed.
+- GitHub push and Vercel production verification are pending; the local browser gate is not evidence of the live deployment.
+- Failed verification approach: editing Vite-served source during browser automation triggers hot reload and destroys the active modal. Run release QA on an immutable preview build.
+
 ## Current development slice — blast cover
 
 - Work started from `remriel/riftborne` `master` at `4b086da` on branch `codex/riftborne-splash-occlusion`. Vercel's existing project builds `master` for production; branch work must not be confused with a live release.

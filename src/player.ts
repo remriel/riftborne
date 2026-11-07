@@ -3,9 +3,10 @@ import {ELEMENTS} from './config';
 import type {ArenaPhysics} from './physics';
 export function createPlayer():Player{return {id:0,pos:V(0,1.1,16),vel:V(),hp:160,maxHp:160,radius:.8,status:{},hurt:0,armor:0,frozen:0,stagger:0,dead:false,yaw:0,pitch:.12,grounded:true,jumps:0,energy:100,dodge:0,invulnerable:0,runeCD:0,runeTime:0,rune:'Blink',hands:['fire','frost'],primary:[0,0],secondary:[0,0],ultimate:35,dashTime:0,flight:0};}
 export class PlayerController {
+ sensitivity=1;invertY=false;
  update(p:Player,input:Input,physics:ArenaPhysics,dt:number,mods:Record<string,number>,events:GameEvent[]){
   const k=input.keys,press=input.pressed;
-  p.yaw-=input.mouseX*.0022;p.pitch=clamp(p.pitch+input.mouseY*.0018,-1.1,1.15);input.mouseX=0;input.mouseY=0;
+  p.yaw-=input.mouseX*.0022*this.sensitivity;p.pitch=clamp(p.pitch+input.mouseY*.0018*this.sensitivity*(this.invertY?-1:1),-1.1,1.15);input.mouseX=0;input.mouseY=0;
   const forward=V(-Math.sin(p.yaw),0,-Math.cos(p.yaw)),right=V(Math.cos(p.yaw),0,-Math.sin(p.yaw));
   const move=V();if(k.has('KeyW'))move.add(forward);if(k.has('KeyS'))move.sub(forward);if(k.has('KeyD'))move.add(right);if(k.has('KeyA'))move.sub(right);move.normalize();
   p.dodge=Math.max(0,p.dodge-dt);p.runeCD=Math.max(0,p.runeCD-dt);p.runeTime=Math.max(0,p.runeTime-dt);p.invulnerable=Math.max(0,p.invulnerable-dt);p.flight=Math.max(0,p.flight-dt);p.dashTime=Math.max(0,p.dashTime-dt);

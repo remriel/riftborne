@@ -16,12 +16,12 @@
   <div class="boss-hud"><div class="boss-title"><span id="boss-name"></span><span id="boss-phase"></span></div><div class="boss-track"><i id="boss-health"></i><b></b><b></b></div><div class="boss-sub"><span id="boss-state"></span><span id="boss-hp"></span></div></div>
   <div class="top-right"><span id="timer">00:00</span><button id="pause-button" class="quiet">ESC · PAUSE</button></div>
   <div id="crosshair"><i></i><i></i><i></i><i></i><span></span></div><div id="lock-label" hidden>LOCKED</div>
-  <div id="warning"></div><div id="announcement"><span></span><h2></h2></div><div id="combo"></div>
+  <div id="hit-confirm" aria-hidden="true"><b>�</b><span></span></div><div id="field-guide" hidden><span class="eyebrow">FIELD GUIDE</span><p></p><small></small></div><div id="attack-cue" hidden><span></span><div><i></i></div></div><div id="warning" role="status"></div><div id="announcement"><span></span><h2></h2></div><div id="combo" role="status"></div>
   <div class="player-hud"><div class="health-label"><span>VITALITY</span><strong id="health-value">160 <small>/ 160</small></strong></div><div class="health-track"><i id="health"></i></div><div class="energy-track"><i id="energy"></i></div><div class="mobility"><span id="dodge-label">C · AIR DODGE</span><span id="rune-label">R · BLINK</span></div></div>
   <div class="bottom-center"><div id="overdrive"><i></i><span>F · OVERDRIVE <b>35%</b></span></div><span id="movement-hint">SPACE · JUMP / HOLD TO LEVITATE</span></div>
   <div class="gauntlets"><div class="gauntlet" id="left-gauntlet"><div class="element-art"></div><div><small>LMB · LEFT HAND</small><strong>FIRE</strong><span>Q · FLAMEBURST</span></div><b class="cooldown">READY</b></div><div class="gauntlet" id="right-gauntlet"><div class="element-art"></div><div><small>RMB · RIGHT HAND</small><strong>FROST</strong><span>E · FLASH FREEZE</span></div><b class="cooldown">READY</b></div><p>1 / 2 · CYCLE ELEMENTS <span>TAB · LOADOUT</span></p></div>
  </div>
- <section id="modal" hidden aria-modal="true" role="dialog"><div class="modal-panel" id="modal-content"></div></section>
+ <section id="modal" hidden aria-modal="true" role="dialog" aria-label="Riftborne menu"><div class="modal-panel" id="modal-content"></div></section>
  <div id="fatal" hidden></div>
  <script type="module" src="/src/main.ts"></script>
 </body></html>
