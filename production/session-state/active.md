@@ -23,7 +23,7 @@ Apply Codex Game Studio polish workflows to Riftborne and publish a verified inc
 
 ## Verification
 
-28 regression tests pass. TypeScript and Vite production build pass; large-chunk warning and Rapier initialization deprecation remain. The immutable production-preview browser gate passed at 800x450 with zero page errors or failed requests; settings persistence, modal focus wrap, movement, jump, lock-on, dual-cast damage, pause and loadout selection passed. Desktop and small-viewport screenshots were inspected. GitHub push and live Vercel verification remain pending. An initial development-server browser run was interrupted by hot reload during edits; use immutable builds for release QA.
+28 regression tests pass. TypeScript and Vite production build pass; large-chunk warning and Rapier initialization deprecation remain. Local production-preview and live browser smoke passed at 800x450: settings persistence, modal focus wrap, movement, jump, lock-on, dual-cast damage (24.57), pause and loadout selection passed with zero page errors or bad HTTP responses. Desktop and small-viewport screenshots were inspected. Commit `74b3f404ab7c626810a9598c22e1482022f7ec05` is live at `https://riftborne-gamma.vercel.app/`; deployment reached READY with no alias error. Software rendering does not establish hardware GPU performance, and natural campaign balance and human audio review remain open. An initial development-server browser run was interrupted by hot reload during edits; use immutable builds for release QA.
 
 ## Release boundary
 

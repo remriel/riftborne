@@ -4,7 +4,7 @@ Date: 2026-11-07. Request: raise Riftborne toward AAA quality using Codex Game S
 
 ## Studio workflow and ownership
 
-Applied Codex Game Studio v0.5.0 `team-polish`, `game-feel-tuning`, and `implement` workflow guidance from `D:/Codex/2026-11-06/insta/outputs/codex-game-studio`. One agent performs the producer → implementation → QA → release responsibilities sequentially; no subagents. Riftborne remains in its own repository and retains Three.js/Rapier. The studio CLI's Godot/Unity/Unreal initializer is not compatible with this engine and must not rewrite it as Postmarked or claim an engine migration.
+Applied Codex Game Studio v0.5.0 `team-polish`, `game-feel-tuning`, and `implement` workflow guidance from `D:/Codex/2026-11-06/insta/outputs/codex-game-studio`. Producer → implementation → QA → release responsibilities were handled sequentially. Documentation and routine repository maintenance were delegated to Luna Max under the user's explicit instruction; complex reasoning and final release review stayed with the primary agent. Riftborne remains in its own repository and retains Three.js/Rapier. The studio CLI's Godot/Unity/Unreal initializer is not compatible with this engine and must not rewrite it as Postmarked or claim an engine migration.
 
 ## Polish targets and gates
 
