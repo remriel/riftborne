@@ -23,8 +23,8 @@ Pursue an AAA-aspiring graphics uplift for Riftborne, with Blender as the reques
 ## Verification and remaining work
 
 - Code/build gate: TypeScript, 28 regression tests and Vite production build pass per the primary agent.
-- Browser: staged screenshot check passed for loading/rendering and absence of page, shader and request errors. Natural controls and settings/mode checks remain in progress.
-- Not verified: residual seam/repetition acceptability, comprehensive cross-realm visual quality, human art review, GPU performance, optimization of embedded duplicate maps, or production deployment.
+- Browser: staged screenshot check passed for loading/rendering and absence of page, shader and request errors. Natural-input performance-mode smoke passed movement, jump, casting, pause, settings and loadout. A separate AO-off browser check remains open.
+- Not verified: residual seam/repetition acceptability, comprehensive cross-realm visual quality, human art review, GPU performance, optimization of embedded duplicate maps, or all-realm review.
 
 ## Failed approaches to avoid
 
@@ -34,7 +34,7 @@ Pursue an AAA-aspiring graphics uplift for Riftborne, with Blender as the reques
 
 ## Release boundary
 
-Repository: `remriel/riftborne`; branch `master`; current base `e48dd3ed700203365c0f8cebf3c0ff782781a2d9`. Source, tests and generated assets remain in the shared uncommitted worktree. The previous clarity/control release remains live; no graphics deployment is verified. Hold staging/push until natural input and performance checks report. The user previously authorized the overall GitHub/Vercel release, but no graphics publication has occurred.
+Repository `remriel/riftborne`, branch `master`; graphics commit `dc26c744` is live as Vercel deployment `dpl_2pz1GDPirj72UVivDYmXJXQQQxEP`. The public alias and new bundle returned HTTP 200.
 
 ## Previous completed release
 

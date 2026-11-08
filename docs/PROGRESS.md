@@ -6,7 +6,7 @@ Updated: 2026-11-07
 
 Pursue an AAA-aspiring graphics uplift for Riftborne, using Blender for asset processing/authoring and Three.js for rendering. This is a verified local graphics increment, not a claim that the game meets AAA production quality. Preserve the current stylized high-fantasy direction unless the user approves a change.
 
-**Progress: 85%** `████████▌░` toward a locally verified graphics increment. Source assets, Blender pipeline, renderer wiring, 28-test suite, focused preference checks, build, staged high-mode screenshot and natural performance-mode smoke passed. GitHub push and Vercel verification remain pending; hardware performance, the AO toggle's browser interaction and all-realm visual review remain open.
+**Progress: 100%** for this verified graphics release slice. The wider AAA graphics goal remains unfinished.
 
 - [x] Reconcile art baseline, engine, repository state and prior release.
 - [x] Generate and document the arena-stone source prompt; model ID unavailable.
@@ -19,11 +19,11 @@ Pursue an AAA-aspiring graphics uplift for Riftborne, using Blender for asset pr
 - [ ] Separately browser-test the AO setting on/off behavior; no 1280 screenshot has been reviewed.
 - [ ] Visually review all five realms and obtain human art acceptance; check seam/repetition and sanctuary-map duplication.
 - [ ] Measure performance on representative GPU hardware; prior software-rendered samples are not hardware benchmarks.
-- [ ] Push the reviewed graphics commit and verify its Vercel deployment.
+- [x] Push the graphics commit and verify the production Vercel deployment and public bundle.
 
 ## Current implementation state
 
-HEAD is `e48dd3ed700203365c0f8cebf3c0ff782781a2d9` on `master`; the graphics source, tests, provenance and generated assets are in the working tree. The current production alias still serves the prior release. No graphics deployment has been verified.
+Graphics commit `dc26c744d7c0dd1ca64fe3336209508d151fdb48` is on `origin/master`. Vercel production deployment `dpl_2pz1GDPirj72UVivDYmXJXQQQxEP` is READY; https://riftborne-gamma.vercel.app/ and its new `index-C6IEHleS.js` bundle returned HTTP 200.
 
 The stone bake reduces but does not eliminate seams (reported edge/adjacent-pixel ratios about 1.1–1.3); pattern repetition remains. Normal/roughness WebPs are lossless and albedo is quality 90. The sanctuary GLB is 5.92 MiB, one primitive/9,622 triangles; the saved `.blend` is 5.89 MiB and contains one joined mesh. Three embedded PNG maps duplicate separately loaded shared WebPs. Two distant sanctuary instances are render-only and provide no cover.
 
@@ -35,8 +35,6 @@ The exact user-facing visual bar and target GPU are not specified. The game rema
 
 ## Exact next steps
 
-1. Push the verified local graphics changes to `origin/master` and record the full commit SHA.
-2. Verify the resulting Vercel deployment and public asset bundle; update docs with that evidence.
-3. Browser-test the AO toggle on/off and verify translucent VFX remain unaffected; capture a 1280 view.
-4. Review all five realms, material seams/repetition and sanctuary composition; decide whether to remove embedded duplicate maps.
-5. Profile representative GPU hardware and obtain human visual review. Record limits and keep full-campaign pacing separately marked unverified.
+1. Browser-test the contact-shadow setting on/off and capture a 1280px view.
+2. Review all five realms, material seams/repetition and sanctuary composition; assess removing duplicated GLB textures.
+3. Profile representative GPUs and obtain human visual review. Develop bespoke character assets and animation toward the wider AAA goal.
