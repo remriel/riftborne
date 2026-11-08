@@ -1,30 +1,41 @@
-# Active session — clarity and control
+# Active session — graphics quality uplift
 
 Updated: 2026-11-07
 
 ## Objective
 
-Apply Codex Game Studio polish workflows to Riftborne and publish a verified increment to GitHub and Vercel. See `production/polish-plan.md` for discipline responsibilities, acceptance gates and deferred AAA production needs.
+Pursue an AAA-aspiring graphics uplift for Riftborne, with Blender as the requested asset-authoring and bake tool and Three.js as the runtime renderer. This is not a claim of AAA completion. Preserve the existing stylized high-fantasy direction unless the user approves another look.
 
-## Implementation
+## Implementation and provenance
 
-- Hit confirmation and core-strike labels use combat events; a throttled synthesized confirmation tone distinguishes impacts from casts.
-- Contextual movement/jump/dualcast/dodge/lock-on hints stay off the center of play and expire after 60 seconds. Settings can disable them.
-- Boss wind-up countdown shows attack name and remaining time. Existing damage rules and timing remain unchanged.
-- Larger HUD typography, keyboard modal focus containment, cleared mouse deltas on pause/resume.
-- Validated persisted sensitivity, invert-Y, reduced-motion, hints and performance preferences retain compatibility with old settings.
-- Performance mode caps DPR at 1, disables shadows/bloom and reduces zone layers. Defeated sentinel animation/material instances are released instead of retained until realm transition.
+- Generated `art/arena-stone-premium-source.png` with the built-in OpenAI image-generation tool. The exact prompt is in `art/PROMPTS.md`; the resolved model ID was not exposed.
+- `art/bake-arena-stone.py` uses Blender 5.2.3 Cycles to edge-blend shifted samples and derive 1024px albedo, tangent normal and luminance-estimated roughness. `scripts/package-arena-stone.mjs` writes `public/assets/arena-stone-{albedo,normal,roughness}.webp`; albedo is WebP quality 90, normal/roughness are lossless. Seams are reduced but remain (reported edge/adjacent-pixel ratios about 1.1–1.3), and pattern repetition remains.
+- `art/build-sky-sanctuary.py` builds editable `art/sky-sanctuary.blend` and runtime `public/assets/sky-sanctuary.glb` using 12 licensed KayKit CC0 modules and four sculpted cliff forms. Saved source is a single joined mesh; the GLB is one primitive with 9,622 triangles and about 5.92 MiB. Its three embedded PNG maps duplicate shared WebPs loaded separately. Two distant runtime placements are render-only scenery, not collision or cover.
+- Three.js asset/world code applies the stone maps to the arena and finished stone modules and places the sanctuary instances. `ContactOcclusionPass` adds half-resolution GTAO/contact shadows, excluding transparent sprites/materials during the pass. A persisted `Contact shadows` option defaults on; performance mode bypasses post-processing/AO.
+- The primary agent reports TypeScript, all 28 tests and production build pass. A staged 800x450 screenshot was inspected: the new GLB/maps loaded, high-quality GTAO/bloom rendered, and no page/shader/request errors appeared. That sample reported 190 composed draw calls, 337,420 triangles and smoothed 28.95 ms; this software-rendered sample is not a hardware benchmark. Natural input and settings-mode QA is in progress.
 
 ## Documentation Impact
 
 - Decision: updated
-- Documents: docs/PROJECT_STATE.md, docs/PROGRESS.md, production/polish-plan.md
-- Reason: Player-visible input, settings, HUD feedback, onboarding and rendering choices changed; document these behaviors, test evidence and production limitations.
+- Documents: `ASSETS.md`, `art/PROMPTS.md`, `docs/PROJECT_STATE.md`, `docs/PROGRESS.md`, `production/graphics-quality-plan.md`, `production/session-state/active.md`, `WISDOM.MD`
+- Reason: The new generated source, Blender bake pipeline, sanctuary asset, renderer behavior and player-facing setting require provenance, implementation records, QA evidence and explicit limitations.
 
-## Verification
+## Verification and remaining work
 
-28 regression tests pass. TypeScript and Vite production build pass; large-chunk warning and Rapier initialization deprecation remain. Local production-preview and live browser smoke passed at 800x450: settings persistence, modal focus wrap, movement, jump, lock-on, dual-cast damage (24.57), pause and loadout selection passed with zero page errors or bad HTTP responses. Desktop and small-viewport screenshots were inspected. Commit `74b3f404ab7c626810a9598c22e1482022f7ec05` is live at `https://riftborne-gamma.vercel.app/`; deployment reached READY with no alias error. Software rendering does not establish hardware GPU performance, and natural campaign balance and human audio review remain open. An initial development-server browser run was interrupted by hot reload during edits; use immutable builds for release QA.
+- Code/build gate: TypeScript, 28 regression tests and Vite production build pass per the primary agent.
+- Browser: staged screenshot check passed for loading/rendering and absence of page, shader and request errors. Natural controls and settings/mode checks remain in progress.
+- Not verified: residual seam/repetition acceptability, comprehensive cross-realm visual quality, human art review, GPU performance, optimization of embedded duplicate maps, or production deployment.
+
+## Failed approaches to avoid
+
+- An injected Blender session did not provide `__file__`; the bake script was corrected to read injected `args`. The documented command-line form also works.
+- The first sanctuary preview had no scene World; the builder now creates one.
+- Do not describe the current stone map as seamless or the distant sanctuary as physical cover.
 
 ## Release boundary
 
-Repository: remriel/riftborne. Base: 5e69efd. Vercel: REMRIEL / riftborne / production. No engine migration or new art claim. Natural full-campaign balance, human audio review and hardware GPU performance remain unverified.
+Repository: `remriel/riftborne`; branch `master`; current base `e48dd3ed700203365c0f8cebf3c0ff782781a2d9`. Source, tests and generated assets remain in the shared uncommitted worktree. The previous clarity/control release remains live; no graphics deployment is verified. Hold staging/push until natural input and performance checks report. The user previously authorized the overall GitHub/Vercel release, but no graphics publication has occurred.
+
+## Previous completed release
+
+The prior clarity/control slice passed 28 tests, TypeScript, production build and local/live 800x450 browser smoke, then deployed to Vercel. Its acceptance does not substitute for QA of the current graphics changes; see `docs/PROJECT_STATE.md`.

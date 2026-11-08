@@ -15,3 +15,19 @@ Three original transparent PNG sources are preserved as `art/magic-projectiles-s
 ## September 2026 graphics update
 OpenAI-generated stone and six-material character atlas sources are in art/. Seven existing KayKit ruin meshes were finished in Blender. The playable mage and five bosses use Blender-remodeled source meshes, preserved source rigs/animations, and generated material surfaces; the Archon now has a distinct exported asset. Original source licenses continue to apply. Prompts and derivation notes: art/PROMPTS.md.
 
+## Arena stone material — 2026-11-07
+
+- Original source: `art/arena-stone-premium-source.png`, created with the built-in OpenAI image-generation tool. The resolved model identifier was not exposed. The exact prompt is recorded in `art/PROMPTS.md`.
+- `art/bake-arena-stone.py` uses Blender 5.2.3 Cycles to cross-fade shifted source samples near the UV edges and derive 1024x1024 albedo, tangent-space normal and luminance-estimated roughness maps. It reads/writes separate source and output paths; the source is not overwritten.
+- `scripts/package-arena-stone.mjs` packages the maps to `public/assets/arena-stone-albedo.webp`, `arena-stone-normal.webp`, and `arena-stone-roughness.webp`. The albedo WebP uses quality 90; normal and roughness WebPs use lossless encoding.
+- The edge blend reduced but did not eliminate seams. The reported edge-to-adjacent-pixel ratios are approximately 1.1–1.3, and the stone pattern repeats. Do not call the current map seamless; visual acceptance and iteration remain pending.
+
+## Sky sanctuary environment — 2026-11-07
+
+- Editable Blender source: `art/sky-sanctuary.blend`; build script: `art/build-sky-sanctuary.py`; runtime export: `public/assets/sky-sanctuary.glb`.
+- The sanctuary combines 12 modules from the project's licensed KayKit CC0 asset set with four cliff forms sculpted in Blender. Existing licensed source assets are retained; character rigs and character source assets were not replaced in this slice.
+- The two distant sanctuary instances are render-only scenery. They have no collision/cover behavior and must not be described as physical cover.
+- The saved `.blend` contains one joined sanctuary mesh, not a modular collection with independent transforms. The GLB has one primitive, 9,622 triangles and is about 5.92 MiB; the `.blend` is about 5.89 MiB.
+- The GLB currently embeds three PNG maps that duplicate the separately loaded shared WebP material maps. Review whether the embedded copies can be removed before release.
+- A staged 800x450 browser image showed the GLB and maps loaded with high-quality GTAO/bloom and no page, shader or request errors. This single staged image is not visual sign-off or a deployment claim; natural input/mode QA is still underway.
+

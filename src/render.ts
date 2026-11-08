@@ -4,6 +4,7 @@ import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
 import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+import {ContactOcclusionPass} from './contact-occlusion';
 import {AssetLibrary,type ActorAnimation} from './assets';
 import {BiomeView} from './world';
 import {VFXManager} from './vfx';
@@ -12,15 +13,15 @@ import {V,clamp} from './core';
 import type {Game} from './game';
 interface Actor {root:T.Group;anim:ActorAnimation;materials:T.MeshStandardMaterial[];}
 export class GameRenderer {
- scene=new T.Scene();camera=new T.PerspectiveCamera(75,innerWidth/innerHeight,.1,450);renderer:T.WebGLRenderer;composer:EffectComposer;bloom:UnrealBloomPass;
- assets=new AssetLibrary();world!:BiomeView;vfx:VFXManager;actors=new Map<number,Actor>();dynamic=new Map<number,T.Object3D>();props=new Map<number,T.Object3D>();lastBiome=-1;lastBoss:unknown;raycaster=new T.Raycaster();target=V();fov=75;shakeEnabled=true;quality=true;reducedMotion=false;performanceMode=false;frameMs=16;core!:T.Sprite;sun!:T.DirectionalLight;rim!:T.DirectionalLight;ambient!:T.HemisphereLight;spellLights:T.PointLight[]=[];
+ scene=new T.Scene();camera=new T.PerspectiveCamera(75,innerWidth/innerHeight,.1,450);renderer:T.WebGLRenderer;composer:EffectComposer;bloom:UnrealBloomPass;occlusion:ContactOcclusionPass;
+ assets=new AssetLibrary();world!:BiomeView;vfx:VFXManager;actors=new Map<number,Actor>();dynamic=new Map<number,T.Object3D>();props=new Map<number,T.Object3D>();lastBiome=-1;lastBoss:unknown;raycaster=new T.Raycaster();target=V();fov=75;shakeEnabled=true;quality=true;ambientOcclusion=true;reducedMotion=false;performanceMode=false;frameMs=16;core!:T.Sprite;sun!:T.DirectionalLight;rim!:T.DirectionalLight;ambient!:T.HemisphereLight;spellLights:T.PointLight[]=[];
  constructor(public canvas:HTMLCanvasElement){
   this.renderer=new T.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});this.renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));this.renderer.setSize(innerWidth,innerHeight);this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=T.PCFSoftShadowMap;this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.05;
   this.ambient=new T.HemisphereLight(0xc6ddff,0x303244,1.35);this.scene.add(this.ambient);const sun=this.sun=new T.DirectionalLight(0xffddbb,3.2);sun.position.set(-35,45,25);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-55,right:55,top:55,bottom:-55,near:1,far:150});sun.shadow.bias=-.0005;sun.shadow.normalBias=.07;this.scene.add(sun);
   const rim=this.rim=new T.DirectionalLight(0x84c6ff,1.6);rim.position.set(20,15,-30);this.scene.add(rim);
   const pmrem=new T.PMREMGenerator(this.renderer),room=new RoomEnvironment();this.scene.environment=pmrem.fromScene(room,.04).texture;this.scene.environmentIntensity=.22;room.dispose();pmrem.dispose();
   for(let i=0;i<8;i++){const light=new T.PointLight(0xffffff,0,15,2);this.spellLights.push(light);this.scene.add(light);}
-  this.renderer.info.autoReset=false;this.vfx=new VFXManager(this.scene);this.composer=new EffectComposer(this.renderer);this.composer.addPass(new RenderPass(this.scene,this.camera));this.bloom=new UnrealBloomPass(new T.Vector2(innerWidth,innerHeight),.52,.45,1.15);this.composer.addPass(this.bloom);this.composer.addPass(new OutputPass());
+  this.renderer.info.autoReset=false;this.vfx=new VFXManager(this.scene);this.composer=new EffectComposer(this.renderer);this.composer.addPass(new RenderPass(this.scene,this.camera));this.occlusion=new ContactOcclusionPass(this.scene,this.camera);this.composer.addPass(this.occlusion);this.bloom=new UnrealBloomPass(new T.Vector2(innerWidth,innerHeight),.52,.45,1.15);this.composer.addPass(this.bloom);this.composer.addPass(new OutputPass());
   window.addEventListener('resize',()=>this.resize());canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();document.getElementById('fatal')!.textContent='Graphics context interrupted. Reload to restore the arena.';document.getElementById('fatal')!.hidden=false;});
  }
  async init(g:Game,progress:(n:number)=>void){await this.assets.load(progress);this.vfx.configure(this.assets.textures);this.vfx.resize(innerHeight*this.renderer.getPixelRatio());this.scene.background=this.assets.textures.get('sky')!;this.world=new BiomeView(this.scene,this.assets);this.build(g);}
@@ -64,7 +65,7 @@ export class GameRenderer {
   for(let hand=0;hand<2;hand++){const id=-20-hand;const o=get(id,()=>this.vfx.orb(p.hands[hand],1.5));const right=V(Math.cos(p.yaw),0,-Math.sin(p.yaw));o.position.copy(p.pos).addScaledVector(right,hand===0?-.7:.7).add(V(0,.5,0));this.vfx.setOrbElement(o as T.Sprite,p.hands[hand]);o.visible=g.state!=='menu';}
   for(const [id,obj] of this.dynamic)if(!alive.has(id)){this.vfx.disposeObject(obj);this.dynamic.delete(id);}
   const shots=[...g.projectiles.filter(s=>s.owner==='player'),...g.projectiles.filter(s=>s.owner==='enemy')];for(let i=0;i<this.spellLights.length;i++){const light=this.spellLights[i],burst=i>=6?this.vfx.bursts.at(i-8):undefined,shot=shots[i];if(burst){light.position.copy(burst.root.position);light.color.set(this.vfx.color(burst.element));light.intensity=Math.min(65,burst.power*9)*(1-burst.age/burst.life);light.distance=18;}else if(shot){light.position.copy(shot.pos);light.color.set(SPELLS[shot.element].color);light.intensity=shot.heavy?65:24;light.distance=15;}else light.intensity=0;}
-  this.vfx.update(g.state==='playing'?dt:0);this.renderer.info.reset();if(this.quality&&!this.performanceMode)this.composer.render();else this.renderer.render(this.scene,this.camera);
+  this.vfx.update(g.state==='playing'?dt:0);this.renderer.info.reset();if(!this.performanceMode&&(this.quality||this.ambientOcclusion)){this.bloom.enabled=this.quality;this.occlusion.enabled=this.ambientOcclusion;this.composer.render();}else this.renderer.render(this.scene,this.camera);
  }
 }
 
