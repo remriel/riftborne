@@ -73,3 +73,5 @@ All six elements now use original generated energy cores and sigils: curling fir
 
 - [Apex Type](https://github.com/remriel/apex-type): a Three.js typing racer with classic cars and multiplayer rooms.
 - [Katamari Neighborhood](https://github.com/remriel/katamari-neighborhood): a rolling, object-collecting 3D browser game inspired by Katamari.
+
+If you find this project useful, you can [buy me a coffee](https://buymeacoffee.com/remriel).
